@@ -70,7 +70,7 @@ OpenPonkGithub >> commitChangesForProject: aProjectController withDiagram: aCanv
 	aProjectController saveProject.
 	projectFile := (aProjectController project storageFile ifNil: []) pathString.
 	pngFile := projectFile copyReplaceAll: '.opp' with: '.png'.
-	aCanvasModel exportCanvasTo: pngFile asFileReference.
+	aCanvasModel exportCanvasToPng: pngFile asFileReference.
 	self commitChangesFor: { OPGHFile withPath: projectFile. OPGHFile withPath: pngFile. }.
 ]
 
