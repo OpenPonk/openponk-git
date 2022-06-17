@@ -372,7 +372,7 @@ OpenPonkGithub >> showCommitForm [
 { #category : #'fetch-process' }
 OpenPonkGithub >> showDirectoryDialog [
 
-	StFBFileDialogPresenter chooseThenDo: [ :directory | 
+	StFBOpenFileDialog chooseThenDo: [ :directory | 
 		self directorySelected: directory pathString ]
 ]
 
