@@ -371,9 +371,9 @@ OpenPonkGithub >> showCommitForm [
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> showDirectoryDialog [
-	FDOpenDirectoryDialog new
-	whenSelected: [ :directory | self directorySelected: directory pathString. ];
-	open.
+
+	StFBFileDialogPresenter chooseThenDo: [ :directory | 
+		self directorySelected: directory pathString ]
 ]
 
 { #category : #'fetch-process' }
