@@ -1,6 +1,6 @@
 Class {
 	#name : #OpenPonkGithubAuthorUI,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'model',
 		'labelName',
@@ -15,22 +15,38 @@ Class {
 	#category : #'OpenPonk-Github'
 }
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithubAuthorUI class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelName;
+				   add: #textName;
+				   yourself)
+		  origin: 0 @ 0 corner: 1 @ 0.2;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelEmail;
+				   add: #textEmail;
+				   yourself)
+		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelSave;
+				   add: #checkBoxSave;
+				   yourself)
+		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #buttonConfirm;
+				   add: #buttonCancel;
+				   yourself)
+		  origin: 0 @ 0.8 corner: 1 @ 1;
+		  yourself
+]
+
 { #category : #specs }
 OpenPonkGithubAuthorUI class >> defaultSpec [
-	^ SpecLayout composed
-		newRow: [ :row |
-			row add: #labelName; add: #textName ]
-		origin: 0 @ 0 corner: 1 @ 0.2;
-		newRow: [ :row |
-			row add: #labelEmail; add: #textEmail ]
-		origin: 0 @ 0.2 corner: 1 @ 0.4;
-		newRow: [ :row |
-			row add: #labelSave; add: #checkBoxSave ]
-		origin: 0 @ 0.4 corner: 1 @ 0.6;
-		newRow: [ :row |
-			row add: #buttonConfirm; add: #buttonCancel ]
-		origin: 0 @ 0.8 corner: 1 @ 1;
-		yourself.
+
+	self flag: 'Pharo 9- compatibility'.
+	^ self defaultLayout
 ]
 
 { #category : #accessing }
@@ -61,6 +77,13 @@ OpenPonkGithubAuthorUI >> checkBoxSave [
 { #category : #accessing }
 OpenPonkGithubAuthorUI >> checkBoxSave: anObject [
 	checkBoxSave := anObject
+]
+
+{ #category : #'as yet unclassified' }
+OpenPonkGithubAuthorUI >> connectPresenters [
+	buttonConfirm action: [ self model authorSet: self.
+		 self window delete. ].
+	buttonCancel action: [ self window delete ].
 ]
 
 { #category : #api }
@@ -107,11 +130,14 @@ OpenPonkGithubAuthorUI >> initializeLabels [
 	
 ]
 
-{ #category : #initialization }
-OpenPonkGithubAuthorUI >> initializePresenter [
-	buttonConfirm action: [ self model authorSet: self.
-		 self window delete. ].
-	buttonCancel action: [ self window delete ].
+{ #category : #'as yet unclassified' }
+OpenPonkGithubAuthorUI >> initializePresenters [
+	self 
+		initializeLabels;
+		initializeButtons;
+		initializeTextBoxes;
+		initializeCheckBoxes;
+		initializeFocusOrder.
 ]
 
 { #category : #initialization }
@@ -120,16 +146,6 @@ OpenPonkGithubAuthorUI >> initializeTextBoxes [
 	textName autoAccept: true.
 	textEmail := self newTextInput.
 	textEmail autoAccept: true.
-]
-
-{ #category : #initialization }
-OpenPonkGithubAuthorUI >> initializeWidgets [
-	self 
-		initializeLabels;
-		initializeButtons;
-		initializeTextBoxes;
-		initializeCheckBoxes;
-		initializeFocusOrder.
 ]
 
 { #category : #accessing }

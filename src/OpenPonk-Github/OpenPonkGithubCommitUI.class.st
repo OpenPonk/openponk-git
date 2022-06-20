@@ -1,6 +1,6 @@
 Class {
 	#name : #OpenPonkGithubCommitUI,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'model',
 		'labelRepository',
@@ -17,25 +17,43 @@ Class {
 	#category : #'OpenPonk-Github'
 }
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCommitUI class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelRepository;
+				   add: #textRepository;
+				   yourself)
+		  origin: 0 @ 0 corner: 1 @ 0.2;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelBranch;
+				   add: #textBranch;
+				   yourself)
+		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelSave;
+				   add: #checkBoxSave;
+				   yourself)
+		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelMsg;
+				   add: #textMsg;
+				   yourself)
+		  origin: 0 @ 0.6 corner: 1 @ 0.8;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #buttonCommit;
+				   add: #buttonCancel;
+				   yourself)
+		  origin: 0 @ 0.8 corner: 1 @ 1;
+		  yourself
+]
+
 { #category : #specs }
 OpenPonkGithubCommitUI class >> defaultSpec [
-	^ SpecLayout composed
-		newRow: [ :row |
-			row add: #labelRepository; add: #textRepository ]
-		origin: 0 @ 0 corner: 1 @ 0.2;
-		newRow: [ :row |
-			row add: #labelBranch; add: #textBranch  ]
-		origin: 0 @ 0.2 corner: 1 @ 0.4;
-		newRow: [ :row |
-			row add: #labelSave; add: #checkBoxSave ]
-		origin: 0 @ 0.4 corner: 1 @ 0.6;
-		newRow: [ :row |
-			row add: #labelMsg; add: #textMsg ]
-		origin: 0 @ 0.6 corner: 1 @ 0.8;
-		newRow: [ :row |
-			row add: #buttonCommit; add: #buttonCancel ]
-		origin: 0 @ 0.8 corner: 1 @ 1;
-		yourself.
+
+	self flag: 'Pharo 9- compatibility'.
+	^ self defaultLayout
 ]
 
 { #category : #accessing }
@@ -66,6 +84,13 @@ OpenPonkGithubCommitUI >> checkBoxSave [
 { #category : #accessing }
 OpenPonkGithubCommitUI >> checkBoxSave: anObject [
 	checkBoxSave := anObject
+]
+
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCommitUI >> connectPresenters [
+	buttonCommit action: [ self model commitSet: self.
+		 self window delete. ].
+	buttonCancel action: [ self window delete ].
 ]
 
 { #category : #api }
@@ -115,11 +140,14 @@ OpenPonkGithubCommitUI >> initializeLabels [
 	
 ]
 
-{ #category : #initialization }
-OpenPonkGithubCommitUI >> initializePresenter [
-	buttonCommit action: [ self model commitSet: self.
-		 self window delete. ].
-	buttonCancel action: [ self window delete ].
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCommitUI >> initializePresenters [
+	self 
+		initializeLabels;
+		initializeButtons;
+		initializeTextBoxes;
+		initializeCheckBoxes;
+		initializeFocusOrder.
 ]
 
 { #category : #initialization }
@@ -131,16 +159,6 @@ OpenPonkGithubCommitUI >> initializeTextBoxes [
 	textRepository ghostText: 'owner/repository'.
 	textMsg := self newTextInput.	
 	textMsg autoAccept: true.
-]
-
-{ #category : #initialization }
-OpenPonkGithubCommitUI >> initializeWidgets [
-	self 
-		initializeLabels;
-		initializeButtons;
-		initializeTextBoxes;
-		initializeCheckBoxes;
-		initializeFocusOrder.
 ]
 
 { #category : #accessing }

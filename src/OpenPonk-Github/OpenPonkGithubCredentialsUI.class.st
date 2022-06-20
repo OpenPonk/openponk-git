@@ -1,6 +1,6 @@
 Class {
 	#name : #OpenPonkGithubCredentialsUI,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'callOnConfirm',
 		'labelToken',
@@ -13,19 +13,33 @@ Class {
 	#category : #'OpenPonk-Github'
 }
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCredentialsUI class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelToken;
+				   add: #textToken;
+				   yourself)
+		  origin: 0 @ 0 corner: 1 @ 0.3;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelSave;
+				   add: #checkBoxSave;
+				   yourself)
+		  origin: 0 @ 0.3 corner: 1 @ 0.6;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #buttonConfirm;
+				   add: #buttonCancel;
+				   yourself)
+		  origin: 0 @ 0.6 corner: 1 @ 1;
+		  yourself
+]
+
 { #category : #specs }
 OpenPonkGithubCredentialsUI class >> defaultSpec [
-	^ SpecLayout composed
-		newRow: [ :row |
-			row add: #labelToken; add: #textToken ]
-		origin: 0 @ 0 corner: 1 @ 0.3;
-		newRow: [ :row |
-			row add: #labelSave; add: #checkBoxSave ]
-		origin: 0 @ 0.3 corner: 1 @ 0.6;
-		newRow: [ :row |
-			row add: #buttonConfirm; add: #buttonCancel ]
-		origin: 0 @ 0.6 corner: 1 @ 1;
-		yourself.
+
+	self flag: 'Pharo 9- compatibility'.
+	^ self defaultLayout
 ]
 
 { #category : #accessing }
@@ -68,6 +82,13 @@ OpenPonkGithubCredentialsUI >> checkBoxSave: anObject [
 	checkBoxSave := anObject.
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCredentialsUI >> connectPresenters [
+	buttonConfirm action: [ callOnConfirm value.
+		 self window delete ].
+	buttonCancel action: [ self window delete ].
+]
+
 { #category : #api }
 OpenPonkGithubCredentialsUI >> extent [
 	^ 600@130
@@ -108,27 +129,20 @@ OpenPonkGithubCredentialsUI >> initializeLabels [
 	labelToken  label: 'Personal token'.
 ]
 
-{ #category : #initialization }
-OpenPonkGithubCredentialsUI >> initializePresenter [
-	buttonConfirm action: [ callOnConfirm value.
-		 self window delete ].
-	buttonCancel action: [ self window delete ].
-]
-
-{ #category : #initialization }
-OpenPonkGithubCredentialsUI >> initializeTextBoxes [
-	textToken := self newTextInput.
-	textToken autoAccept: true.
-]
-
-{ #category : #initialization }
-OpenPonkGithubCredentialsUI >> initializeWidgets [
+{ #category : #'as yet unclassified' }
+OpenPonkGithubCredentialsUI >> initializePresenters [
 	self 
 		initializeLabels;
 		initializeButtons;
 		initializeTextBoxes;
 		initializeCheckBoxes;
 		initializeFocusOrder.
+]
+
+{ #category : #initialization }
+OpenPonkGithubCredentialsUI >> initializeTextBoxes [
+	textToken := self newTextInput.
+	textToken autoAccept: true.
 ]
 
 { #category : #accessing }

@@ -1,6 +1,6 @@
 Class {
 	#name : #OpenPonkGithubFetchUI,
-	#superclass : #ComposablePresenter,
+	#superclass : #SpPresenter,
 	#instVars : [
 		'model',
 		'labelRepository',
@@ -15,22 +15,38 @@ Class {
 	#category : #'OpenPonk-Github'
 }
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithubFetchUI class >> defaultLayout [
+
+	^ SpBoxLayout newTopToBottom
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelRepository;
+				   add: #textRepository;
+				   yourself)
+		  origin: 0 @ 0 corner: 1 @ 0.2;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelBranch;
+				   add: #textBranch;
+				   yourself)
+		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #labelSave;
+				   add: #checkBoxSave;
+				   yourself)
+		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+		  add: (SpBoxLayout newLeftToRight
+				   add: #buttonFetch;
+				   add: #buttonCancel;
+				   yourself)
+		  origin: 0 @ 0.8 corner: 1 @ 1;
+		  yourself
+]
+
 { #category : #specs }
 OpenPonkGithubFetchUI class >> defaultSpec [
-	^ SpecLayout composed
-		newRow: [ :row |
-			row add: #labelRepository; add: #textRepository ]
-		origin: 0 @ 0 corner: 1 @ 0.2;
-		newRow: [ :row |
-			row add: #labelBranch; add: #textBranch  ]
-		origin: 0 @ 0.2 corner: 1 @ 0.4;
-		newRow: [ :row |
-			row add: #labelSave; add: #checkBoxSave ]
-		origin: 0 @ 0.4 corner: 1 @ 0.6;
-		newRow: [ :row |
-			row add: #buttonFetch; add: #buttonCancel ]
-		origin: 0 @ 0.8 corner: 1 @ 1;
-		yourself.
+
+	self flag: 'Pharo 9- compatibility'.
+	^ self defaultLayout
 ]
 
 { #category : #accessing }
@@ -61,6 +77,13 @@ OpenPonkGithubFetchUI >> checkBoxSave [
 { #category : #accessing }
 OpenPonkGithubFetchUI >> checkBoxSave: anObject [
 	checkBoxSave := anObject
+]
+
+{ #category : #'as yet unclassified' }
+OpenPonkGithubFetchUI >> connectPresenters [
+	buttonFetch action: [ self model fetchRepositoryFilled: self.
+		 self window delete. ].
+	buttonCancel action: [ self window delete ].
 ]
 
 { #category : #api }
@@ -106,11 +129,14 @@ OpenPonkGithubFetchUI >> initializeLabels [
 	labelRepository label: 'Repository name'.
 ]
 
-{ #category : #initialization }
-OpenPonkGithubFetchUI >> initializePresenter [
-	buttonFetch action: [ self model fetchRepositoryFilled: self.
-		 self window delete. ].
-	buttonCancel action: [ self window delete ].
+{ #category : #'as yet unclassified' }
+OpenPonkGithubFetchUI >> initializePresenters [
+	self 
+		initializeLabels;
+		initializeButtons;
+		initializeTextBoxes;
+		initializeCheckBoxes;
+		initializeFocusOrder.
 ]
 
 { #category : #initialization }
@@ -120,16 +146,6 @@ OpenPonkGithubFetchUI >> initializeTextBoxes [
 	textRepository  := self newTextInput.
 	textRepository autoAccept: true.
 	textRepository ghostText: 'owner/repository'.
-]
-
-{ #category : #initialization }
-OpenPonkGithubFetchUI >> initializeWidgets [
-	self 
-		initializeLabels;
-		initializeButtons;
-		initializeTextBoxes;
-		initializeCheckBoxes;
-		initializeFocusOrder.
 ]
 
 { #category : #accessing }
