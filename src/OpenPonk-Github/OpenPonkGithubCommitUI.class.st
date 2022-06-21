@@ -152,13 +152,11 @@ OpenPonkGithubCommitUI >> initializePresenters [
 
 { #category : #initialization }
 OpenPonkGithubCommitUI >> initializeTextBoxes [
+
 	textBranch := self newTextInput.
-	textBranch autoAccept: true.
-	textRepository  := self newTextInput.
-	textRepository autoAccept: true.
+	textRepository := self newTextInput.
 	textRepository ghostText: 'owner/repository'.
-	textMsg := self newTextInput.	
-	textMsg autoAccept: true.
+	textMsg := self newTextInput
 ]
 
 { #category : #accessing }

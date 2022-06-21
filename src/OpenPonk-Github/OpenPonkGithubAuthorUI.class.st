@@ -142,10 +142,9 @@ OpenPonkGithubAuthorUI >> initializePresenters [
 
 { #category : #initialization }
 OpenPonkGithubAuthorUI >> initializeTextBoxes [
+
 	textName := self newTextInput.
-	textName autoAccept: true.
-	textEmail := self newTextInput.
-	textEmail autoAccept: true.
+	textEmail := self newTextInput
 ]
 
 { #category : #accessing }

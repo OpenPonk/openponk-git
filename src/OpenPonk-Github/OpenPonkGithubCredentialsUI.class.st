@@ -141,8 +141,8 @@ OpenPonkGithubCredentialsUI >> initializePresenters [
 
 { #category : #initialization }
 OpenPonkGithubCredentialsUI >> initializeTextBoxes [
-	textToken := self newTextInput.
-	textToken autoAccept: true.
+
+	textToken := self newTextInput
 ]
 
 { #category : #accessing }
