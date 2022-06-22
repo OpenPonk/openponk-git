@@ -141,11 +141,10 @@ OpenPonkGithubFetchUI >> initializePresenters [
 
 { #category : #initialization }
 OpenPonkGithubFetchUI >> initializeTextBoxes [
+
 	textBranch := self newTextInput.
-	textBranch autoAccept: true.
-	textRepository  := self newTextInput.
-	textRepository autoAccept: true.
-	textRepository ghostText: 'owner/repository'.
+	textRepository := self newTextInput.
+	textRepository placeholder: 'owner/repository'
 ]
 
 { #category : #accessing }

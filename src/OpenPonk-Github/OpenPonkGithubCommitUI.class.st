@@ -155,7 +155,7 @@ OpenPonkGithubCommitUI >> initializeTextBoxes [
 
 	textBranch := self newTextInput.
 	textRepository := self newTextInput.
-	textRepository ghostText: 'owner/repository'.
+	textRepository placeholder: 'owner/repository'.
 	textMsg := self newTextInput
 ]
 
