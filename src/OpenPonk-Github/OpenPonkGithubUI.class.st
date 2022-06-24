@@ -8,13 +8,6 @@ Class {
 OpenPonkGithubUI class >> defaultLayout [
 ]
 
-{ #category : #specs }
-OpenPonkGithubUI class >> defaultSpec [
-
-	self flag: 'Pharo 9- compatibility'.
-	^ self defaultLayout
-]
-
 { #category : #toolbar }
 OpenPonkGithubUI class >> toolbarMenu: aBuilder [ 
 	<opEditorToolbarMenu: #OPUmlClassEditorPlugin>

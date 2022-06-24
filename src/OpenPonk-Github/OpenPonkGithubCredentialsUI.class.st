@@ -35,13 +35,6 @@ OpenPonkGithubCredentialsUI class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
-OpenPonkGithubCredentialsUI class >> defaultSpec [
-
-	self flag: 'Pharo 9- compatibility'.
-	^ self defaultLayout
-]
-
 { #category : #accessing }
 OpenPonkGithubCredentialsUI >> buttonCancel [
 	^ buttonCancel

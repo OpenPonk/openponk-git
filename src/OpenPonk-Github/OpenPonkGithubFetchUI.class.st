@@ -42,13 +42,6 @@ OpenPonkGithubFetchUI class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
-OpenPonkGithubFetchUI class >> defaultSpec [
-
-	self flag: 'Pharo 9- compatibility'.
-	^ self defaultLayout
-]
-
 { #category : #accessing }
 OpenPonkGithubFetchUI >> buttonCancel [
 	^ buttonCancel

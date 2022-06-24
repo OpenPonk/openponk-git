@@ -49,13 +49,6 @@ OpenPonkGithubCommitUI class >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
-OpenPonkGithubCommitUI class >> defaultSpec [
-
-	self flag: 'Pharo 9- compatibility'.
-	^ self defaultLayout
-]
-
 { #category : #accessing }
 OpenPonkGithubCommitUI >> buttonCancel [
 	^ buttonCancel
