@@ -22,10 +22,16 @@ OpenPonkGithubUI class >> toolbarMenu: aBuilder [
 
 { #category : #toolbar }
 OpenPonkGithubUI class >> toolbarMenuItemsFor: aBuilder [
+
 	(aBuilder item: 'Upload project to GitHub')
-		action: [ (OpenPonkGithub withProject: aBuilder model workbench projectController withDiagram: aBuilder model canvasPresenter) startCommitProcess. ].
+		icon: OntoUMLIcons ontoumlIcon;
+		action: [ 
+			(OpenPonkGithub
+				 withProject: aBuilder model workbench projectController
+				 withDiagram: aBuilder model canvasPresenter) startCommitProcess ].
 	(aBuilder item: 'Download project from GitHub')
-		action: [ OpenPonkGithub new startFetchProcess. ].
+		icon: OntoUMLIcons ontoumlIcon;
+		action: [ OpenPonkGithub new startFetchProcess ]
 ]
 
 { #category : #'as yet unclassified' }
