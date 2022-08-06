@@ -20,32 +20,35 @@ Class {
 { #category : #'as yet unclassified' }
 OpenPonkGithubCommitUI class >> defaultLayout [
 
+	| labelsWidth |
+	labelsWidth := 180.
 	^ SpBoxLayout newTopToBottom
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelRepository;
+				   spacing: 5;
+				   add: #labelRepository width: labelsWidth;
 				   add: #textRepository;
-				   yourself)
-		  origin: 0 @ 0 corner: 1 @ 0.2;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelBranch;
+				   spacing: 5;
+				   add: #labelBranch width: labelsWidth;
 				   add: #textBranch;
-				   yourself)
-		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelSave;
+				   spacing: 5;
+				   add: #labelSave width: labelsWidth;
 				   add: #checkBoxSave;
-				   yourself)
-		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelMsg;
+				   spacing: 5;
+				   add: #labelMsg width: labelsWidth;
 				   add: #textMsg;
-				   yourself)
-		  origin: 0 @ 0.6 corner: 1 @ 0.8;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #buttonCommit;
-				   add: #buttonCancel;
-				   yourself)
-		  origin: 0 @ 0.8 corner: 1 @ 1;
+				   spacing: 5;
+				   hAlignEnd;
+				   add: #buttonCancel expand: false;
+				   add: #buttonCommit expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -84,11 +87,6 @@ OpenPonkGithubCommitUI >> connectPresenters [
 	buttonCommit action: [ self model commitSet: self.
 		 self window delete. ].
 	buttonCancel action: [ self window delete ].
-]
-
-{ #category : #api }
-OpenPonkGithubCommitUI >> extent [
-	^ 600@250
 ]
 
 { #category : #initialization }
@@ -150,6 +148,14 @@ OpenPonkGithubCommitUI >> initializeTextBoxes [
 	textRepository := self newTextInput.
 	textRepository placeholder: 'owner/repository'.
 	textMsg := self newTextInput
+]
+
+{ #category : #api }
+OpenPonkGithubCommitUI >> initializeWindow: aWindow [
+
+	aWindow
+		initialExtent: 550 @ 120;
+		title: 'Commit form'
 ]
 
 { #category : #accessing }
@@ -230,9 +236,4 @@ OpenPonkGithubCommitUI >> textRepository [
 { #category : #accessing }
 OpenPonkGithubCommitUI >> textRepository: anObject [
 	textRepository := anObject
-]
-
-{ #category : #api }
-OpenPonkGithubCommitUI >> title [
-	^ 'Commit form'.
 ]

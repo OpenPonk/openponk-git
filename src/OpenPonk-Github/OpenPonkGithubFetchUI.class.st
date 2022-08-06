@@ -18,27 +18,30 @@ Class {
 { #category : #'as yet unclassified' }
 OpenPonkGithubFetchUI class >> defaultLayout [
 
+	| labelsWidth |
+	labelsWidth := 180.
 	^ SpBoxLayout newTopToBottom
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelRepository;
+				   spacing: 5;
+				   add: #labelRepository width: labelsWidth;
 				   add: #textRepository;
-				   yourself)
-		  origin: 0 @ 0 corner: 1 @ 0.2;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelBranch;
+				   spacing: 5;
+				   add: #labelBranch width: labelsWidth;
 				   add: #textBranch;
-				   yourself)
-		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelSave;
+				   spacing: 5;
+				   add: #labelSave width: labelsWidth;
 				   add: #checkBoxSave;
-				   yourself)
-		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #buttonFetch;
-				   add: #buttonCancel;
-				   yourself)
-		  origin: 0 @ 0.8 corner: 1 @ 1;
+				   spacing: 5;
+				   hAlignEnd;
+				   add: #buttonCancel expand: false;
+				   add: #buttonFetch expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -140,6 +143,14 @@ OpenPonkGithubFetchUI >> initializeTextBoxes [
 	textRepository placeholder: 'owner/repository'
 ]
 
+{ #category : #api }
+OpenPonkGithubFetchUI >> initializeWindow: aWindow [
+
+	aWindow
+		initialExtent: 520 @ 165;
+		title: 'Repository form'
+]
+
 { #category : #accessing }
 OpenPonkGithubFetchUI >> labelBranch [
 	^ labelBranch
@@ -198,9 +209,4 @@ OpenPonkGithubFetchUI >> textRepository [
 { #category : #accessing }
 OpenPonkGithubFetchUI >> textRepository: anObject [
 	textRepository := anObject
-]
-
-{ #category : #api }
-OpenPonkGithubFetchUI >> title [
-	^ 'Repository form'.
 ]

@@ -122,7 +122,11 @@ OpenPonkGithub >> diagram: anObject [
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> directorySelected: aDirectoryPath [
-	self fetchProjectAndSaveItTo: aDirectoryPath.
+
+	(self fetchProjectAndSaveItTo: aDirectoryPath)
+		select: [ :each | each endsWith: '.opp' ]
+		thenDo: [ :each | 
+		(OPProjectController fromFile: each asFileReference) open ]
 ]
 
 { #category : #'querying-github' }
@@ -149,14 +153,14 @@ OpenPonkGithub >> fetchFileContentFor: aFile [
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> fetchProjectAndSaveItTo: aDirectoryPath [
-	| lastCommitSha treeSha fileBlobs | 
+
+	| lastCommitSha treeSha fileBlobs |
 	lastCommitSha := self getLastCommitSha.
 	treeSha := self getTreeShaFrom: lastCommitSha.
 	fileBlobs := self getFileBlobsFrom: treeSha.
-	fileBlobs do: [ :blob | 
-		self getContentFor: blob.
-		blob saveTo: aDirectoryPath. ].
-	
+	^ fileBlobs collect: [ :blob | 
+		  self getContentFor: blob.
+		  blob saveTo: aDirectoryPath ]
 ]
 
 { #category : #'fetch-process' }
@@ -227,11 +231,15 @@ OpenPonkGithub >> getFileTreeStringFor: aFile [
 
 { #category : #'querying-github' }
 OpenPonkGithub >> getLastCommitSha [
+
 	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/branches/' , commit branch.
+	client
+		url: self userRepositoryURL , '/branches/' , commit branch;
+		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
+		headerAt: 'Authorization' put: 'token ' , credentials token.
 	response := NeoJSONReader fromString: client get.
-	^ (response at: 'commit') at: 'sha'.
+	^ (response at: 'commit') at: 'sha'
 ]
 
 { #category : #'private-entity creation' }
@@ -336,67 +344,77 @@ OpenPonkGithub >> reposURL [
 
 { #category : #'commit-process' }
 OpenPonkGithub >> showAuthorForm [
+
 	| ui savedAuthor |
 	ui := OpenPonkGithubAuthorUI new.
 	ui model: self.
 	savedAuthor := OPGHAuthor savedInstance.
-	savedAuthor ifNotNil: [ ui textName text: savedAuthor name.
-		ui textEmail text: savedAuthor email. 
-		ui checkBoxSave state: true.].
-	ui openWithSpec.
+	savedAuthor ifNotNil: [ 
+		ui textName text: savedAuthor name.
+		ui textEmail text: savedAuthor email.
+		ui checkBoxSave state: true ].
+	ui open
 ]
 
 { #category : #'commit-process' }
 OpenPonkGithub >> showCommitCredentialsForm [
+
 	| ui savedCredentials |
 	ui := OpenPonkGithubCredentialsUI new.
 	ui callOnConfirm: [ self credentialsSet: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
-	savedCredentials ifNotNil: [ ui textToken text: savedCredentials token. 
-		ui checkBoxSave state: true. ].
-	ui openWithSpec.
+	savedCredentials ifNotNil: [ 
+		ui textToken text: savedCredentials token.
+		ui checkBoxSave state: true ].
+	ui open
 ]
 
 { #category : #'commit-process' }
 OpenPonkGithub >> showCommitForm [
+
 	| ui savedCommit |
 	ui := OpenPonkGithubCommitUI new.
 	ui model: self.
 	savedCommit := OPGHCommit savedInstance.
-	savedCommit ifNotNil: [ ui textRepository text: savedCommit repository.
-		ui textBranch text: savedCommit branch. 
-		ui checkBoxSave state: true. ].
-	ui openWithSpec.
+	savedCommit ifNotNil: [ 
+		ui textRepository text: savedCommit repository.
+		ui textBranch text: savedCommit branch.
+		ui checkBoxSave state: true ].
+	ui open
 ]
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> showDirectoryDialog [
 
-	StFBOpenFileDialog chooseThenDo: [ :directory | 
+	StFBOpenDirectoryDialog chooseThenDo: [ :directory | 
 		self directorySelected: directory pathString ]
 ]
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> showFetchCredentialsForm [
+
 	| ui savedCredentials |
 	ui := OpenPonkGithubCredentialsUI new.
 	ui callOnConfirm: [ self fetchCredentialsFilled: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
-	savedCredentials ifNotNil: [ ui textToken text: savedCredentials token. 
-		ui checkBoxSave state: true. ].
-	ui openWithSpec.
+	savedCredentials ifNotNil: [ 
+		ui textToken text: savedCredentials token.
+		ui checkBoxSave state: true ].
+	ui open
 ]
 
 { #category : #'fetch-process' }
 OpenPonkGithub >> showFetchRepositoryForm [
+
 	| ui repository |
 	ui := OpenPonkGithubFetchUI new.
 	ui model: self.
 	repository := OPGHCommit savedInstance.
-	repository ifNotNil: [ ui textRepository text: repository repository.
-		ui textBranch text: repository branch. 
-		ui checkBoxSave state: true. ].
-	ui openWithSpec.
+	repository ifNotNil: [ 
+		ui textRepository text: repository repository.
+		ui textBranch text: repository branch.
+		ui checkBoxSave state: true ].
+	ui open
 ]
 
 { #category : #'commit-process' }

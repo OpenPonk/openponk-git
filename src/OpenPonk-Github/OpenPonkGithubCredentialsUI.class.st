@@ -18,20 +18,21 @@ OpenPonkGithubCredentialsUI class >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelToken;
+				   spacing: 5;
+				   add: #labelToken width: 140;
 				   add: #textToken;
-				   yourself)
-		  origin: 0 @ 0 corner: 1 @ 0.3;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelSave;
+				   spacing: 5;
+				   add: #labelSave width: 140;
 				   add: #checkBoxSave;
-				   yourself)
-		  origin: 0 @ 0.3 corner: 1 @ 0.6;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #buttonConfirm;
-				   add: #buttonCancel;
-				   yourself)
-		  origin: 0 @ 0.6 corner: 1 @ 1;
+				   spacing: 5;
+				   hAlignEnd;
+				   add: #buttonCancel expand: false;
+				   add: #buttonConfirm expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -82,11 +83,6 @@ OpenPonkGithubCredentialsUI >> connectPresenters [
 	buttonCancel action: [ self window delete ].
 ]
 
-{ #category : #api }
-OpenPonkGithubCredentialsUI >> extent [
-	^ 600@130
-]
-
 { #category : #initialization }
 OpenPonkGithubCredentialsUI >> initializeButtons [
 	buttonConfirm := self newButton.
@@ -119,7 +115,7 @@ OpenPonkGithubCredentialsUI >> initializeLabels [
 	labelToken := self newLabel.	
 	
 	labelSave label: 'Save credentials?'.
-	labelToken  label: 'Personal token'.
+	labelToken  label: 'Personal access token'.
 ]
 
 { #category : #'as yet unclassified' }
@@ -136,6 +132,14 @@ OpenPonkGithubCredentialsUI >> initializePresenters [
 OpenPonkGithubCredentialsUI >> initializeTextBoxes [
 
 	textToken := self newTextInput
+]
+
+{ #category : #api }
+OpenPonkGithubCredentialsUI >> initializeWindow: aWindow [
+
+	aWindow
+		initialExtent: 450 @ 130;
+		title: 'Credentials form'
 ]
 
 { #category : #accessing }
@@ -166,9 +170,4 @@ OpenPonkGithubCredentialsUI >> textToken [
 { #category : #accessing }
 OpenPonkGithubCredentialsUI >> textToken: anObject [
 	textToken := anObject
-]
-
-{ #category : #api }
-OpenPonkGithubCredentialsUI >> title [
-	^ 'Credentials form'.
 ]

@@ -116,11 +116,11 @@ OPGHFile >> saveTextTo: aFileName [
 
 { #category : #fileout }
 OPGHFile >> saveTo: aDirectoryPath [
-	(encoding = 'base64') 
-		ifTrue:  [ self saveBinaryTo: (aDirectoryPath , '\' , path) ]
-		ifFalse: [ self saveTextTo: (aDirectoryPath , '\' , path) ].
-		"(aDirectoryPath , '\' , path) asFileReference inspect  writeStreamDo: [ :stream | 
-    stream 
-        binary; 
-        nextPutAll: content ]."
+
+	| localFilePath |
+	localFilePath := aDirectoryPath , '\' , path.
+	encoding = 'base64'
+		ifTrue: [ self saveBinaryTo: localFilePath ]
+		ifFalse: [ self saveTextTo: localFilePath ].
+	^ localFilePath
 ]

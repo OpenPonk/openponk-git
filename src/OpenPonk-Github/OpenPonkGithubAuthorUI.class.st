@@ -18,27 +18,30 @@ Class {
 { #category : #'as yet unclassified' }
 OpenPonkGithubAuthorUI class >> defaultLayout [
 
+	| labelsWidth |
+	labelsWidth := 150.
 	^ SpBoxLayout newTopToBottom
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelName;
+				   spacing: 5;
+				   add: #labelName width: labelsWidth;
 				   add: #textName;
-				   yourself)
-		  origin: 0 @ 0 corner: 1 @ 0.2;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelEmail;
+				   spacing: 5;
+				   add: #labelEmail width: labelsWidth;
 				   add: #textEmail;
-				   yourself)
-		  origin: 0 @ 0.2 corner: 1 @ 0.4;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #labelSave;
+				   spacing: 5;
+				   add: #labelSave width: labelsWidth;
 				   add: #checkBoxSave;
-				   yourself)
-		  origin: 0 @ 0.4 corner: 1 @ 0.6;
+				   yourself);
 		  add: (SpBoxLayout newLeftToRight
-				   add: #buttonConfirm;
-				   add: #buttonCancel;
-				   yourself)
-		  origin: 0 @ 0.8 corner: 1 @ 1;
+				   spacing: 5;
+				   hAlignEnd;
+				   add: #buttonCancel expand: false;
+				   add: #buttonConfirm expand: false;
+				   yourself);
 		  yourself
 ]
 
@@ -77,11 +80,6 @@ OpenPonkGithubAuthorUI >> connectPresenters [
 	buttonConfirm action: [ self model authorSet: self.
 		 self window delete. ].
 	buttonCancel action: [ self window delete ].
-]
-
-{ #category : #api }
-OpenPonkGithubAuthorUI >> extent [
-	^ 600@200
 ]
 
 { #category : #initialization }
@@ -138,6 +136,14 @@ OpenPonkGithubAuthorUI >> initializeTextBoxes [
 
 	textName := self newTextInput.
 	textEmail := self newTextInput
+]
+
+{ #category : #api }
+OpenPonkGithubAuthorUI >> initializeWindow: aWindow [
+
+	aWindow
+		initialExtent: 400 @ 155;
+		title: 'Author form'
 ]
 
 { #category : #accessing }
@@ -198,9 +204,4 @@ OpenPonkGithubAuthorUI >> textName [
 { #category : #accessing }
 OpenPonkGithubAuthorUI >> textName: anObject [
 	textName := anObject
-]
-
-{ #category : #api }
-OpenPonkGithubAuthorUI >> title [
-	^ 'Author form'.
 ]
