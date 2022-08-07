@@ -75,12 +75,20 @@ OpenPonkGit >> commitChangesFor: aFileCollection [
 
 { #category : #'querying-github' }
 OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasModel [
+
 	| projectFile pngFile |
 	aProjectController saveProject.
-	projectFile := (aProjectController project storageFile ifNil: []) pathString.
-	pngFile := projectFile copyReplaceAll: '.opp' with: '.png'.
-	aCanvasModel exportCanvasToPng: pngFile asFileReference.
-	self commitChangesFor: { OPGHFile withPath: projectFile. OPGHFile withPath: pngFile. }.
+	projectFile := aProjectController project storageFile ifNil: [ 
+		               ^ self error: 'Saving project failed' ].
+	pngFile := projectFile withExtension: 'png'.
+	aCanvasModel exportCanvasToPng: pngFile.
+	self commitChangesFor: { 
+			(OPGHFile
+				 withPath: projectFile basename
+				 relativeTo: projectFile parent pathString).
+			(OPGHFile
+				 withPath: pngFile basename
+				 relativeTo: pngFile parent pathString) }
 ]
 
 { #category : #'commit-process' }
@@ -121,6 +129,12 @@ OpenPonkGit >> diagram: anObject [
 	diagram := anObject
 ]
 
+{ #category : #accessing }
+OpenPonkGit >> directoryInRepo [
+
+	^ ''
+]
+
 { #category : #'fetch-process' }
 OpenPonkGit >> directorySelected: aDirectoryPath [
 
@@ -153,6 +167,18 @@ OpenPonkGit >> fetchRepositoryFilled: aForm [
 	self showDirectoryDialog.
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGit >> filterBlobs: blobDictionaryCollection [
+
+	| result |
+	result := blobDictionaryCollection collect: [ :each | 
+		          OPGHFile
+			          withPath: (each at: 'path')
+			          withSha: (each at: self shaKey) ].
+
+	^ result select: [ :file | { 'opp'. 'png' } includes: file extension ]
+]
+
 { #category : #'commit-process' }
 OpenPonkGit >> getAuthorEmail [
 
@@ -168,19 +194,15 @@ OpenPonkGit >> getContentFor: aFile [
 	client := ZnClient new.
 	client url: (self blobUrlFor: aFile).
 	self prepareGet: client.
-	response := NeoJSONReader fromString: client get.
+	response := [ :job | 
+	            job title: 'Getting contents of ' , aFile path.
+	            NeoJSONReader fromString: client get ] asJob run.
 	aFile content: (response at: 'content').
 	aFile encoding: (response at: 'encoding')
 ]
 
 { #category : #'querying-github' }
 OpenPonkGit >> getFileBlobsOf: aLastCommitSha [
-
-	^ self subclassResponsibility
-]
-
-{ #category : #'private-entity creation' }
-OpenPonkGit >> getFileTreeStringFor: aFile [
 
 	^ self subclassResponsibility
 ]
@@ -192,7 +214,9 @@ OpenPonkGit >> getLastCommitSha [
 	client := ZnClient new.
 	client url: self userRepositoryURL , '/branches/' , commit branch.
 	self prepareGet: client.
-	response := NeoJSONReader fromString: client get.
+	response := [ :job | 
+	            job title: 'Getting info about last repository commit'.
+	            NeoJSONReader fromString: client get ] asJob run.
 	^ (response at: 'commit') at: self shaKey
 ]
 
@@ -203,13 +227,9 @@ OpenPonkGit >> getPossibleAuthorEmails [
 	client := ZnClient new.
 	client url: self apiURL , '/user/emails'.
 	self prepareGet: client.
-	^ NeoJSONReader fromString: client get
-]
-
-{ #category : #'querying-github' }
-OpenPonkGit >> getTreeShaFrom: aCommitSha [
-
-	^ self subclassResponsibility
+	^ [ :job | 
+	  job title: 'Getting your email address'.
+	  NeoJSONReader fromString: client get ] asJob run
 ]
 
 { #category : #initialization }
@@ -219,13 +239,13 @@ OpenPonkGit >> initialize [
 	commit := OPGHCommit getInstance.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'querying-github' }
 OpenPonkGit >> prepareGet: client [
 
 	self addTokenTo: client
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'querying-github' }
 OpenPonkGit >> preparePost: client [
 
 	self addTokenTo: client
@@ -254,14 +274,16 @@ OpenPonkGit >> setAuthor [
 	client := ZnClient new.
 	client url: self apiURL , '/user'.
 	self prepareGet: client.
-	response := NeoJSONReader fromString: client get.
+	response := [ :job | 
+	            job title: 'Getting your name and email address'.
+	            NeoJSONReader fromString: client get ] asJob run.
 	author name: ((response at: 'name') ifNil: [ 
 			 ^ self error: 'Cannot get your name from git' ]).
 	author email: ((response at: 'email') ifNil: [ self getAuthorEmail ]).
 	self commitChangesForProject: project withDiagram: diagram
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'querying-github' }
 OpenPonkGit >> shaKey [
 
 	^ 'sha'

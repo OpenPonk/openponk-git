@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'blobSha',
 		'path',
-		'directory',
-		'name',
+		'localDirectoryOfPath',
 		'content',
 		'encoding'
 	],
@@ -13,11 +12,14 @@ Class {
 }
 
 { #category : #navigating }
-OPGHFile class >> withPath: aPath [
+OPGHFile class >> withPath: aPath relativeTo: aLocalDirectoryPath [
+
 	| file |
 	file := self new.
-	file path: aPath.
-	^ file.
+	file
+		path: aPath;
+		localDirectoryOfPath: aLocalDirectoryPath.
+	^ file
 ]
 
 { #category : #navigating }
@@ -46,23 +48,16 @@ OPGHFile >> content: anObject [
 
 { #category : #accessing }
 OPGHFile >> contentBase64 [
-	^ content ifNil: [ content := path asFileReference binaryReadStream contents base64Encoded].
+
+	^ content ifNil: [ 
+		  content := self localPath asFileReference binaryReadStream
+			             contents base64Encoded ]
 ]
 
 { #category : #accessing }
 OPGHFile >> contentBase64: aBase64String [
 	content := aBase64String.
 	encoding := 'base64'
-]
-
-{ #category : #accessing }
-OPGHFile >> directory [
-	^ directory.
-]
-
-{ #category : #accessing }
-OPGHFile >> directory: aString [
-	directory := aString.
 ]
 
 { #category : #accessing }
@@ -77,22 +72,25 @@ OPGHFile >> encoding: aString [
 
 { #category : #accessing }
 OPGHFile >> extension [
-	^ name ifNil: [ ^ (path substrings: '.') last ] ifNotNil: [^ (name substrings: '.') last  ].
+	^ path asPath extension
+]
+
+{ #category : #fileout }
+OPGHFile >> localDirectoryOfPath: aDirectoryPath [
+
+	localDirectoryOfPath := aDirectoryPath
 ]
 
 { #category : #accessing }
-OPGHFile >> name [
-	^ name ifNil: [name:=(path substrings: '\') last].
-]
+OPGHFile >> localPath [
 
-{ #category : #accessing }
-OPGHFile >> name: aString [
-	name := aString.
+	^ (localDirectoryOfPath asPath / path) pathString
 ]
 
 { #category : #accessing }
 OPGHFile >> path [
-	^ path ifNil: [path := directory , '/' , name].
+
+	^ path
 ]
 
 { #category : #accessing }
@@ -101,26 +99,33 @@ OPGHFile >> path: aPathString [
 ]
 
 { #category : #fileout }
-OPGHFile >> saveBinaryTo: aFileName [
-	aFileName asFileReference binaryWriteStreamDo: [ :stream | 
-    stream
-        nextPutAll: content base64Decoded ].
+OPGHFile >> saveBinary [
+
+	| file |
+	file := self localPath asFileReference.
+	file parent ensureCreateDirectory.
+	file binaryWriteStreamDo: [ :stream | 
+		stream nextPutAll: content base64Decoded ]
 ]
 
 { #category : #fileout }
-OPGHFile >> saveTextTo: aFileName [
-	aFileName asFileReference writeStreamDo: [ :stream | 
-    stream truncate;
-        nextPutAll: content ].
+OPGHFile >> saveText [
+
+	| file |
+	file := self localPath asFileReference.
+	file parent ensureCreateDirectory.
+	file writeStreamDo: [ :stream | 
+		stream
+			truncate;
+			nextPutAll: content ]
 ]
 
 { #category : #fileout }
 OPGHFile >> saveTo: aDirectoryPath [
 
-	| localFilePath |
-	localFilePath := aDirectoryPath , '\' , path.
+	self localDirectoryOfPath: aDirectoryPath.
 	encoding = 'base64'
-		ifTrue: [ self saveBinaryTo: localFilePath ]
-		ifFalse: [ self saveTextTo: localFilePath ].
-	^ localFilePath
+		ifTrue: [ self saveBinary ]
+		ifFalse: [ self saveText ].
+	^ self localPath
 ]

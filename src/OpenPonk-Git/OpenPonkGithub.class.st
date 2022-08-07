@@ -66,14 +66,16 @@ OpenPonkGithub >> getCommitEntityWithCommitSha: commitSha withTreeSha: treeSha [
 
 { #category : #'querying-github' }
 OpenPonkGithub >> getFileBlobsFrom: aTreeSha [
-	| client response result |
+
+	| client response tree |
 	client := ZnClient new.
-	client url: 	self userRepositoryURL , '/git/trees/', aTreeSha;
-	headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-	headerAt: 'Authorization' put: 'token ' , credentials token.
-	response := (NeoJSONReader fromString: (client get)) at: 'tree'.
-	result := response collect: [ :blob | OPGHFile withPath: (blob at: 'path') withSha: (blob at: 'sha'). ].
-	^ result select: [ :file | { 'opp' . 'png'. } includes: file extension. ].
+	client url: self userRepositoryURL , '/git/trees/' , aTreeSha.
+	self prepareGet: client.
+	response := [ :job | 
+	            job title: 'Getting list of files in repository'.
+	            NeoJSONReader fromString: client get ] asJob run.
+	tree := response at: #tree.
+	^ self filterBlobs: tree
 ]
 
 { #category : #'querying-github' }
@@ -111,64 +113,91 @@ OpenPonkGithub >> getTreeEntityFor: aFileCollection withLastCommitSha: aLastComm
 
 { #category : #'querying-github' }
 OpenPonkGithub >> getTreeShaFrom: aCommitSha [
-	| client |
+
+	| client response |
 	client := ZnClient new.
-	client url: 	self userRepositoryURL , '/git/commits/', aCommitSha;
-	headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-	headerAt: 'Authorization' put: 'token ' , credentials token.
-	^ (NeoJSONReader fromString: (client get)) at: 'tree' at: 'sha'.
+	client url: self userRepositoryURL , '/git/commits/' , aCommitSha.
+	self prepareGet: client.
+	response := [ :job | 
+	            job title:
+		            'Getting information about last commit in the repository'.
+	            NeoJSONReader fromString: client get ] asJob run.
+	^ response at: 'tree' at: 'sha'
 ]
 
 { #category : #'querying-github' }
 OpenPonkGithub >> postBlobsFor: aFileCollection [
-	 "POST /repos/:owner/:repo/git/blobs"
-	| client |
+
+	"POST /repos/:owner/:repo/git/blobs"
+
+	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/blobs';
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-		headerAt: 'Authorization' put: 'token ' , credentials token.
-	aFileCollection do: [ :file |
-		 client contents: (self getBase64StringFor: file).
-		file blobSha: ((NeoJSONReader fromString: client post) at: 'sha'). ].
+	client url: self userRepositoryURL , '/git/blobs'.
+	self preparePost: client.
+	response := [ :job | 
+	            job title: 'Uploading files to repository'.
+	            NeoJSONReader fromString: client post ] asJob run.
+	aFileCollection do: [ :file | 
+		client contents: (self getBase64StringFor: file).
+		file blobSha: (response at: self shaKey) ]
 ]
 
 { #category : #'querying-github' }
 OpenPonkGithub >> postBranchHeadFor: aCommitSha [
-	 "POST /repos/:owner/:repo/git/blobs"
+
+	"POST /repos/:owner/:repo/git/blobs"
+
 	| client |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/refs/heads/' , commit branch;
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-		headerAt: 'Authorization' put: 'token ' , credentials token;
-	entity: (ZnEntity with: '{
-  "ref": "refs/heads/', commit branch ,'",
-  "sha": "', aCommitSha ,'"
-}' type: ZnMimeType applicationJson).
-^ NeoJSONReader fromString: client post.
+	client url:
+		self userRepositoryURL , '/git/refs/heads/' , commit branch.
+	client entity: (ZnEntity
+			 with: '{
+  "ref": "refs/heads/' , commit branch , '",
+  "sha": "' , aCommitSha , '"
+}'
+			 type: ZnMimeType applicationJson).
+
+	self preparePost: client.
+	^ [ :job | 
+	  job title: 'Uploading branch info update to repository'.
+	  NeoJSONReader fromString: client post ] asJob run
 ]
 
 { #category : #'querying-github' }
 OpenPonkGithub >> postCommitFor: aFileCollection withLastCommitSha: aLastCommitSha withTreeSha: aTreeSha [
-	 "POST /repos/:owner/:repo/git/blobs"
-	| client |
+
+	"POST /repos/:owner/:repo/git/blobs"
+
+	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/commits';
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-		headerAt: 'Authorization' put: 'token ' , credentials token.
-	client entity: (self getCommitEntityWithCommitSha: aLastCommitSha withTreeSha: aTreeSha).
-	^ ((NeoJSONReader fromString: client post) at: 'sha').
+	client url: self userRepositoryURL , '/git/commits'.
+	client entity: (self
+			 getCommitEntityWithCommitSha: aLastCommitSha
+			 withTreeSha: aTreeSha).
+	self preparePost: client.
+	response := [ :job | 
+	            job title: 'Uploading commit to repository'.
+	            NeoJSONReader fromString: client post ] asJob run.
+	^ response at: self shaKey
 ]
 
 { #category : #'querying-github' }
 OpenPonkGithub >> postTreesFor: aFileCollection withLastCommitSha: aLastCommitSha [
-	 "POST /repos/:owner/:repo/git/trees"
-	| client |
+
+	"POST /repos/:owner/:repo/git/trees"
+
+	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/trees';
-		headerAt: 'Accept' put: 'application/vnd.github.v3+json';
-		headerAt: 'Authorization' put: 'token ' , credentials token.
-	client entity: (self getTreeEntityFor: aFileCollection withLastCommitSha: aLastCommitSha ).
-	^ ((NeoJSONReader fromString: client post) at: 'sha').
+	client url: self userRepositoryURL , '/git/trees'.
+	client entity: (self
+			 getTreeEntityFor: aFileCollection
+			 withLastCommitSha: aLastCommitSha).
+	self preparePost: client.
+	response := [ :job | 
+	            job title: 'Uploading updated file list to repository'.
+	            NeoJSONReader fromString: client post ] asJob run.
+	^ response at: self shaKey
 ]
 
 { #category : #'as yet unclassified' }

@@ -30,7 +30,7 @@ OpenPonkGitlab >> blobUrlFor: aFile [
 { #category : #'querying-github' }
 OpenPonkGitlab >> commitChangesFor: aFileCollection [
 
-	| lastCommitSha client |
+	| lastCommitSha client response |
 	lastCommitSha := self getLastCommitSha.
 	client := ZnClient new.
 	client url: self userRepositoryURL , '/commits'.
@@ -39,7 +39,10 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 			 getCommitEntityFor: aFileCollection
 			 withCommitSha: lastCommitSha).
 	self preparePost: client.
-	^ (NeoJSONReader fromString: client post) at: self shaKey
+	response := [ :job | 
+	            job title: 'Uploading commit to repository'.
+	            NeoJSONReader fromString: client post ] asJob run.
+	^ response at: self shaKey
 ]
 
 { #category : #'querying-github' }
@@ -83,18 +86,16 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitS
 { #category : #'querying-github' }
 OpenPonkGitlab >> getFileBlobsOf: aCommitSha [
 
-	| client files |
+	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/tree'.
+	client url: self userRepositoryURL , '/tree?path='
+		, self directoryInRepo urlEncoded.
 	self prepareGet: client.
-	files := (NeoJSONReader fromString: client get)
-		         select: [ :each | (each at: #type) = 'blob' ]
-		         thenCollect: [ :each | 
-			         OPGHFile
-				         withPath: (each at: 'path')
-				         withSha: (each at: self shaKey) ].
-
-	^ files select: [ :file | { 'opp'. 'png' } includes: file extension ]
+	response := [ :job | 
+	            job title: 'Getting list of files in repository'.
+	            NeoJSONReader fromString: client get ] asJob run.
+	^ self filterBlobs:
+		  (response select: [ :each | (each at: #type) = 'blob' ])
 ]
 
 { #category : #'querying-github' }
@@ -110,7 +111,7 @@ OpenPonkGitlab >> reposURL [
 	^ self apiURL , '/projects'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #hooks }
 OpenPonkGitlab >> shaKey [
 
 	^ 'id'

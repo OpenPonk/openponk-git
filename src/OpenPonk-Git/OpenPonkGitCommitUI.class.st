@@ -72,6 +72,15 @@ OpenPonkGitCommitUI >> buttonCommit: anObject [
 	buttonCommit := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGitCommitUI >> checkAllFilled [
+
+	textRepository text trim ifEmpty: [ ^ buttonCommit disable ].
+	textBranch text trim ifEmpty: [ ^ buttonCommit disable ].
+	textMsg text trim ifEmpty: [ ^ buttonCommit disable ].
+	buttonCommit enable
+]
+
 { #category : #accessing }
 OpenPonkGitCommitUI >> checkBoxSave [
 	^ checkBoxSave
@@ -84,9 +93,15 @@ OpenPonkGitCommitUI >> checkBoxSave: anObject [
 
 { #category : #'as yet unclassified' }
 OpenPonkGitCommitUI >> connectPresenters [
-	buttonCommit action: [ self model commitSet: self.
-		 self window delete. ].
+
+	buttonCommit action: [ 
+		self model commitSet: self.
+		self window delete ].
 	buttonCancel action: [ self window delete ].
+	textRepository whenTextChangedDo: [ self checkAllFilled ].
+	textBranch whenTextChangedDo: [ self checkAllFilled ].
+	textMsg whenTextChangedDo: [ self checkAllFilled ].
+	self checkAllFilled
 ]
 
 { #category : #initialization }
