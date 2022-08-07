@@ -12,7 +12,8 @@ Class {
 
 { #category : #accessing }
 OPGHCredentials class >> deleteSavedInstance [
-	savedInstance := nil.
+
+	savedInstance := nil
 ]
 
 { #category : #accessing }
@@ -27,7 +28,8 @@ OPGHCredentials class >> savedInstance [
 
 { #category : #accessing }
 OPGHCredentials class >> savedInstance: aInstance [
-	 savedInstance := aInstance.
+
+	savedInstance := aInstance
 ]
 
 { #category : #accessing }

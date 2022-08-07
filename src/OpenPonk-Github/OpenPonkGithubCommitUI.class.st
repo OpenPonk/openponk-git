@@ -154,7 +154,7 @@ OpenPonkGithubCommitUI >> initializeTextBoxes [
 OpenPonkGithubCommitUI >> initializeWindow: aWindow [
 
 	aWindow
-		initialExtent: 550 @ 120;
+		initialExtent: 450 @ 184;
 		title: 'Commit form'
 ]
 
