@@ -90,7 +90,7 @@ OpenPonkGit >> commitSet: aForm [
 	aForm checkBoxSave state ifFalse: [ OPGHCommit deleteSavedInstance. ]
 		ifTrue: [ OPGHCommit savedInstance: commit. ].
 	commit message: aForm textMsg text.
-	self showAuthorForm.
+	self setAuthor.
 ]
 
 { #category : #accessing }
@@ -153,6 +153,14 @@ OpenPonkGit >> fetchRepositoryFilled: aForm [
 	self showDirectoryDialog.
 ]
 
+{ #category : #'commit-process' }
+OpenPonkGit >> getAuthorEmail [
+
+	| options |
+	options := self getPossibleAuthorEmails.
+	^ options first at: #email
+]
+
 { #category : #'querying-github' }
 OpenPonkGit >> getContentFor: aFile [
 
@@ -186,6 +194,16 @@ OpenPonkGit >> getLastCommitSha [
 	self prepareGet: client.
 	response := NeoJSONReader fromString: client get.
 	^ (response at: 'commit') at: self shaKey
+]
+
+{ #category : #'commit-process' }
+OpenPonkGit >> getPossibleAuthorEmails [
+
+	| client |
+	client := ZnClient new.
+	client url: self apiURL , '/user/emails'.
+	self prepareGet: client.
+	^ NeoJSONReader fromString: client get
 ]
 
 { #category : #'querying-github' }
@@ -229,24 +247,24 @@ OpenPonkGit >> reposURL [
 	^ self subclassResponsibility
 ]
 
+{ #category : #'commit-process' }
+OpenPonkGit >> setAuthor [
+
+	| client response |
+	client := ZnClient new.
+	client url: self apiURL , '/user'.
+	self prepareGet: client.
+	response := NeoJSONReader fromString: client get.
+	author name: ((response at: 'name') ifNil: [ 
+			 ^ self error: 'Cannot get your name from git' ]).
+	author email: ((response at: 'email') ifNil: [ self getAuthorEmail ]).
+	self commitChangesForProject: project withDiagram: diagram
+]
+
 { #category : #'as yet unclassified' }
 OpenPonkGit >> shaKey [
 
 	^ 'sha'
-]
-
-{ #category : #'commit-process' }
-OpenPonkGit >> showAuthorForm [
-
-	| ui savedAuthor |
-	ui := OpenPonkGitAuthorUI new.
-	ui model: self.
-	savedAuthor := OPGHAuthor savedInstance.
-	savedAuthor ifNotNil: [ 
-		ui textName text: savedAuthor name.
-		ui textEmail text: savedAuthor email.
-		ui checkBoxSave state: true ].
-	ui open
 ]
 
 { #category : #'commit-process' }

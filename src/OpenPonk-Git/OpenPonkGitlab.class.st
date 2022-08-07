@@ -57,6 +57,15 @@ OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitS
 			  ('content' -> eachFile contentBase64 contents) } asDictionary ]
 ]
 
+{ #category : #'commit-process' }
+OpenPonkGitlab >> getAuthorEmail [
+
+	| options |
+	options := self getPossibleAuthorEmails.
+	^ (options detect: [ :any | 
+		   (any at: #primary) and: [ any at: #verified ] ]) at: #email
+]
+
 { #category : #'querying-github' }
 OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitSha [
 
