@@ -1,7 +1,7 @@
 Class {
 	#name : #OpenPonkGitMenuRegistration,
 	#superclass : #Object,
-	#category : #'OpenPonk-Github'
+	#category : #'OpenPonk-Git'
 }
 
 { #category : #toolbar }

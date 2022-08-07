@@ -8,7 +8,7 @@ Class {
 		'project',
 		'diagram'
 	],
-	#category : #'OpenPonk-Github'
+	#category : #'OpenPonk-Git'
 }
 
 { #category : #initialization }
@@ -239,7 +239,7 @@ OpenPonkGit >> shaKey [
 OpenPonkGit >> showAuthorForm [
 
 	| ui savedAuthor |
-	ui := OpenPonkGithubAuthorUI new.
+	ui := OpenPonkGitAuthorUI new.
 	ui model: self.
 	savedAuthor := OPGHAuthor savedInstance.
 	savedAuthor ifNotNil: [ 
@@ -253,7 +253,7 @@ OpenPonkGit >> showAuthorForm [
 OpenPonkGit >> showCommitCredentialsForm [
 
 	| ui savedCredentials |
-	ui := OpenPonkGithubCredentialsUI new.
+	ui := OpenPonkGitCredentialsUI new.
 	ui callOnConfirm: [ self credentialsSet: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
 	savedCredentials ifNotNil: [ 
@@ -266,7 +266,7 @@ OpenPonkGit >> showCommitCredentialsForm [
 OpenPonkGit >> showCommitForm [
 
 	| ui savedCommit |
-	ui := OpenPonkGithubCommitUI new.
+	ui := OpenPonkGitCommitUI new.
 	ui model: self.
 	savedCommit := OPGHCommit savedInstance.
 	savedCommit ifNotNil: [ 
@@ -287,7 +287,7 @@ OpenPonkGit >> showDirectoryDialog [
 OpenPonkGit >> showFetchCredentialsForm [
 
 	| ui savedCredentials |
-	ui := OpenPonkGithubCredentialsUI new.
+	ui := OpenPonkGitCredentialsUI new.
 	ui callOnConfirm: [ self fetchCredentialsFilled: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
 	savedCredentials ifNotNil: [ 
@@ -300,7 +300,7 @@ OpenPonkGit >> showFetchCredentialsForm [
 OpenPonkGit >> showFetchRepositoryForm [
 
 	| ui repository |
-	ui := OpenPonkGithubFetchUI new.
+	ui := OpenPonkGitFetchUI new.
 	ui model: self.
 	repository := OPGHCommit savedInstance.
 	repository ifNotNil: [ 

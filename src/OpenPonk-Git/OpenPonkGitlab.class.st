@@ -1,7 +1,7 @@
 Class {
 	#name : #OpenPonkGitlab,
 	#superclass : #OpenPonkGit,
-	#category : #'OpenPonk-Github'
+	#category : #'OpenPonk-Git'
 }
 
 { #category : #adding }

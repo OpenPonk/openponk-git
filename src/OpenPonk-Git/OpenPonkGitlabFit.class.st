@@ -1,7 +1,7 @@
 Class {
 	#name : #OpenPonkGitlabFit,
 	#superclass : #OpenPonkGitlab,
-	#category : #'OpenPonk-Github'
+	#category : #'OpenPonk-Git'
 }
 
 { #category : #'constants - url' }
