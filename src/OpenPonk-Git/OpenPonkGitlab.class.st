@@ -16,6 +16,12 @@ OpenPonkGitlab >> addTokenTo: client [
 	client headerAt: 'PRIVATE-TOKEN' put: credentials token
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGitlab >> apiName [
+
+	^ 'GitLab.com'
+]
+
 { #category : #'constants - url' }
 OpenPonkGitlab >> apiURL [
 	^ 'https://gitlab.com/api/v4'
@@ -42,6 +48,7 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 	response := [ :job | 
 	            job title: 'Uploading commit to repository'.
 	            NeoJSONReader fromString: client post ] asJob run.
+	self informCommited.
 	^ response at: self shaKey
 ]
 
@@ -77,7 +84,7 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitS
 		           getActionsToPostFiles: aFileCollection
 		           withCommitSha: lastCommitSha.
 
-	^ ZnEntity with: (NeoJSONWriter toStringPretty: { 
+	^ ZnEntity with: (OPJsonWriter toStringPretty: { 
 				   ('branch' -> commit branch).
 				   ('commit_message' -> commit message).
 				   ('actions' -> actions) } asDictionary)
@@ -88,12 +95,17 @@ OpenPonkGitlab >> getFileBlobsOf: aCommitSha [
 
 	| client response |
 	client := ZnClient new.
+
 	client url: self userRepositoryURL , '/tree?path='
 		, self directoryInRepo urlEncoded.
 	self prepareGet: client.
 	response := [ :job | 
 	            job title: 'Getting list of files in repository'.
 	            NeoJSONReader fromString: client get ] asJob run.
+	response ifEmpty: [ 
+		^ self error:
+			  'There is no model named "' , self directoryInRepo , '" in the '
+			  , self apiName , '.' ].
 	^ self filterBlobs:
 		  (response select: [ :each | (each at: #type) = 'blob' ])
 ]

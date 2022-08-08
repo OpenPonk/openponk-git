@@ -55,12 +55,6 @@ OPGHFile >> contentBase64 [
 ]
 
 { #category : #accessing }
-OPGHFile >> contentBase64: aBase64String [
-	content := aBase64String.
-	encoding := 'base64'
-]
-
-{ #category : #accessing }
 OPGHFile >> encoding [
 	^ encoding.
 ]

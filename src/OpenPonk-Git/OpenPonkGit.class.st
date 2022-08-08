@@ -26,6 +26,12 @@ OpenPonkGit >> addTokenTo: client [
 	self subclassResponsibility
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGit >> apiName [
+
+	^ 'Git'
+]
+
 { #category : #'constants - url' }
 OpenPonkGit >> apiURL [
 
@@ -40,15 +46,6 @@ OpenPonkGit >> author [
 { #category : #accessing }
 OpenPonkGit >> author: aAuthor [
 	author := aAuthor.
-]
-
-{ #category : #'commit-process' }
-OpenPonkGit >> authorSet: aForm [
-	author name: aForm textName text.
-	author email: aForm textEmail text.
-	aForm checkBoxSave state ifFalse: [ OPGHAuthor deleteSavedInstance. ]
-		ifTrue: [ OPGHAuthor savedInstance: author. ].
-	self commitChangesForProject: project withDiagram: diagram.
 ]
 
 { #category : #'querying-github' }
@@ -162,9 +159,10 @@ OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 
 { #category : #'fetch-process' }
 OpenPonkGit >> fetchRepositoryFilled: aForm [
+
 	commit repository: aForm textRepository text.
 	commit branch: aForm textBranch text.
-	self showDirectoryDialog.
+	self showDirectoryDialog
 ]
 
 { #category : #'as yet unclassified' }
@@ -230,6 +228,12 @@ OpenPonkGit >> getPossibleAuthorEmails [
 	^ [ :job | 
 	  job title: 'Getting your email address'.
 	  NeoJSONReader fromString: client get ] asJob run
+]
+
+{ #category : #'as yet unclassified' }
+OpenPonkGit >> informCommited [
+
+	self inform: 'Model uploaded to ' , self apiName
 ]
 
 { #category : #initialization }

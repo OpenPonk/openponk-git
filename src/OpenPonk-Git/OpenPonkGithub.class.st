@@ -16,6 +16,12 @@ OpenPonkGithub >> addTokenTo: client [
 	client headerAt: 'Authorization' put: 'token ' , credentials token
 ]
 
+{ #category : #'as yet unclassified' }
+OpenPonkGithub >> apiName [
+
+	^ 'GitHub'
+]
+
 { #category : #'constants - url' }
 OpenPonkGithub >> apiURL [
 	^ 'https://api.github.com'
@@ -29,12 +35,19 @@ OpenPonkGithub >> blobUrlFor: aFile [
 
 { #category : #'querying-github' }
 OpenPonkGithub >> commitChangesFor: aFileCollection [
+
 	| lastCommitSha treeSha commitSha |
 	lastCommitSha := self getLastCommitSha.
 	self postBlobsFor: aFileCollection.
-	treeSha := self postTreesFor: aFileCollection withLastCommitSha: lastCommitSha.
-	commitSha := self postCommitFor: aFileCollection withLastCommitSha: lastCommitSha withTreeSha: treeSha.
+	treeSha := self
+		           postTreesFor: aFileCollection
+		           withLastCommitSha: lastCommitSha.
+	commitSha := self
+		             postCommitFor: aFileCollection
+		             withLastCommitSha: lastCommitSha
+		             withTreeSha: treeSha.
 	self postBranchHeadFor: commitSha.
+	self informCommited
 ]
 
 { #category : #'private-entity creation' }
