@@ -103,9 +103,7 @@ OpenPonkGitlab >> getFileBlobsOf: aCommitSha [
 	            job title: 'Getting list of files in repository'.
 	            NeoJSONReader fromString: client get ] asJob run.
 	response ifEmpty: [ 
-		^ self error:
-			  'There is no model named "' , self directoryInRepo , '" in the '
-			  , self apiName , '.' ].
+		^ OPGHModelDoesNotExist signalModel: self directoryInRepo ].
 	^ self filterBlobs:
 		  (response select: [ :each | (each at: #type) = 'blob' ])
 ]
