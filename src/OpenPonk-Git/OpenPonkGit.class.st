@@ -143,8 +143,12 @@ OpenPonkGit >> directorySelected: aDirectoryPath [
 
 { #category : #'fetch-process' }
 OpenPonkGit >> fetchCredentialsFilled: aForm [
+
 	credentials token: aForm textToken text.
-	self showFetchRepositoryForm.
+	aForm checkBoxSave state
+		ifFalse: [ OPGHCredentials deleteSavedInstance ]
+		ifTrue: [ OPGHCredentials savedInstance: credentials ].
+	self showFetchRepositoryForm
 ]
 
 { #category : #'fetch-process' }
