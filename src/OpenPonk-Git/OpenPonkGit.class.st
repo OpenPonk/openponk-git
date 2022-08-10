@@ -6,7 +6,8 @@ Class {
 		'credentials',
 		'commit',
 		'project',
-		'diagram'
+		'diagram',
+		'finishedAction'
 	],
 	#category : #'OpenPonk-Git'
 }
@@ -85,7 +86,10 @@ OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasM
 				 relativeTo: projectFile parent pathString).
 			(OPGHFile
 				 withPath: pngFile basename
-				 relativeTo: pngFile parent pathString) }
+				 relativeTo: pngFile parent pathString) }.
+	finishedAction value: { 
+			projectFile.
+			pngFile }
 ]
 
 { #category : #'commit-process' }
@@ -135,10 +139,15 @@ OpenPonkGit >> directoryInRepo [
 { #category : #'fetch-process' }
 OpenPonkGit >> directorySelected: aDirectoryPath [
 
-	(self fetchProjectAndSaveItTo: aDirectoryPath)
-		select: [ :each | each endsWith: '.opp' ]
-		thenDo: [ :each | 
-		(OPProjectController fromFile: each asFileReference) open ]
+	| projectControllers |
+	projectControllers := (self fetchProjectAndSaveItTo: aDirectoryPath)
+		                      select: [ :each | each endsWith: '.opp' ]
+		                      thenCollect: [ :each | 
+			                      (OPProjectController fromFile:
+				                       each asFileReference) open
+				                      projectController ].
+
+	finishedAction value: projectControllers
 ]
 
 { #category : #'fetch-process' }
@@ -242,9 +251,14 @@ OpenPonkGit >> informCommited [
 
 { #category : #initialization }
 OpenPonkGit >> initialize [
+
+	super initialize.
+	
 	author := OPGHAuthor getInstance.
 	credentials := OPGHCredentials getInstance.
 	commit := OPGHCommit getInstance.
+
+	finishedAction := [ :items |  ]
 ]
 
 { #category : #'querying-github' }
@@ -371,4 +385,10 @@ OpenPonkGit >> startFetchProcess [
 { #category : #'constants - url' }
 OpenPonkGit >> userRepositoryURL [
 	^ self reposURL , '/' , commit repository.
+]
+
+{ #category : #accessing }
+OpenPonkGit >> whenFinishedDo: aBlock [
+
+	finishedAction := aBlock
 ]
