@@ -56,7 +56,9 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
 
 	| paths |
-	paths := (self getFileBlobsOf: aCommitSha) collect: #path as: Set.
+	paths := [ (self getFileBlobsOf: aCommitSha) collect: #path as: Set ]
+		         on: OPGHModelDoesNotExist
+		         do: [ Set new ].
 	^ aFileCollection collect: [ :eachFile | 
 		  { 
 			  ('action' -> ((paths includes: eachFile path)
