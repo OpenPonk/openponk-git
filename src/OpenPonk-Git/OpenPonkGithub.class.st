@@ -78,6 +78,12 @@ OpenPonkGithub >> getCommitEntityWithCommitSha: commitSha withTreeSha: treeSha [
 ]
 
 { #category : #'querying-github' }
+OpenPonkGithub >> getFileBlobs [
+
+	^ self getFileBlobsFrom: self getTreeSha
+]
+
+{ #category : #'querying-github' }
 OpenPonkGithub >> getFileBlobsFrom: aTreeSha [
 
 	| client response tree |
@@ -89,12 +95,6 @@ OpenPonkGithub >> getFileBlobsFrom: aTreeSha [
 	            NeoJSONReader fromString: client get ] asJob run.
 	tree := response at: #tree.
 	^ self filterBlobs: tree
-]
-
-{ #category : #'querying-github' }
-OpenPonkGithub >> getFileBlobsOf: aLastCommitSha [
-
-	^ self getFileBlobsFrom: (self getTreeShaFrom: aLastCommitSha)
 ]
 
 { #category : #'private-entity creation' }
@@ -125,11 +125,12 @@ OpenPonkGithub >> getTreeEntityFor: aFileCollection withLastCommitSha: aLastComm
 ]
 
 { #category : #'querying-github' }
-OpenPonkGithub >> getTreeShaFrom: aCommitSha [
+OpenPonkGithub >> getTreeSha [
 
 	| client response |
 	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/commits/' , aCommitSha.
+	client url:
+		self userRepositoryURL , '/git/commits/' , self getLastCommitSha.
 	self prepareGet: client.
 	response := [ :job | 
 	            job title:

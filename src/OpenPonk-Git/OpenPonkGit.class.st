@@ -7,7 +7,8 @@ Class {
 		'commit',
 		'project',
 		'diagram',
-		'finishedAction'
+		'finishedAction',
+		'lastCommitSha'
 	],
 	#category : #'OpenPonk-Git'
 }
@@ -157,14 +158,14 @@ OpenPonkGit >> fetchCredentialsFilled: aForm [
 	aForm checkBoxSave state
 		ifFalse: [ OPGHCredentials deleteSavedInstance ]
 		ifTrue: [ OPGHCredentials savedInstance: credentials ].
-	self showFetchRepositoryForm
+	self showFetchForm
 ]
 
 { #category : #'fetch-process' }
 OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 
 	| fileBlobs |
-	fileBlobs := self getFileBlobsOf: self getLastCommitSha.
+	fileBlobs := self getFileBlobs.
 	^ fileBlobs collect: [ :blob | 
 		  self getContentFor: blob.
 		  blob saveTo: aDirectoryPath ]
@@ -213,7 +214,7 @@ OpenPonkGit >> getContentFor: aFile [
 ]
 
 { #category : #'querying-github' }
-OpenPonkGit >> getFileBlobsOf: aLastCommitSha [
+OpenPonkGit >> getFileBlobs [
 
 	^ self subclassResponsibility
 ]
@@ -222,13 +223,14 @@ OpenPonkGit >> getFileBlobsOf: aLastCommitSha [
 OpenPonkGit >> getLastCommitSha [
 
 	| client response |
+	lastCommitSha ifNotNil: [ ^ lastCommitSha ].
 	client := ZnClient new.
 	client url: self userRepositoryURL , '/branches/' , commit branch.
 	self prepareGet: client.
 	response := [ :job | 
 	            job title: 'Getting info about last repository commit'.
 	            NeoJSONReader fromString: client get ] asJob run.
-	^ (response at: 'commit') at: self shaKey
+	^ lastCommitSha := (response at: 'commit') at: self shaKey
 ]
 
 { #category : #'commit-process' }
@@ -312,24 +314,16 @@ OpenPonkGit >> shaKey [
 ]
 
 { #category : #'commit-process' }
-OpenPonkGit >> showCommitCredentialsForm [
+OpenPonkGit >> showCommitForm [
 
-	| ui savedCredentials |
-	ui := OpenPonkGitCredentialsUI new.
-	ui callOnConfirm: [ self credentialsSet: ui ].
+	| ui savedCommit savedCredentials |
+	ui := OpenPonkGitCommitUI new.
+	ui model: self.
+	ui onConfirmDo: [ self commitSet: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
 	savedCredentials ifNotNil: [ 
 		ui textToken text: savedCredentials token.
 		ui checkBoxSave state: true ].
-	ui open
-]
-
-{ #category : #'commit-process' }
-OpenPonkGit >> showCommitForm [
-
-	| ui savedCommit |
-	ui := OpenPonkGitCommitUI new.
-	ui model: self.
 	savedCommit := OPGHCommit savedInstance.
 	savedCommit ifNotNil: [ 
 		ui textRepository text: savedCommit repository.
@@ -346,24 +340,16 @@ OpenPonkGit >> showDirectoryDialog [
 ]
 
 { #category : #'fetch-process' }
-OpenPonkGit >> showFetchCredentialsForm [
+OpenPonkGit >> showFetchForm [
 
-	| ui savedCredentials |
-	ui := OpenPonkGitCredentialsUI new.
-	ui callOnConfirm: [ self fetchCredentialsFilled: ui ].
+	| ui repository savedCredentials |
+	ui := OpenPonkGitFetchUI new.
+	ui model: self.
+	ui onConfirmDo: [ self fetchRepositoryFilled: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
 	savedCredentials ifNotNil: [ 
 		ui textToken text: savedCredentials token.
 		ui checkBoxSave state: true ].
-	ui open
-]
-
-{ #category : #'fetch-process' }
-OpenPonkGit >> showFetchRepositoryForm [
-
-	| ui repository |
-	ui := OpenPonkGitFetchUI new.
-	ui model: self.
 	repository := OPGHCommit savedInstance.
 	repository ifNotNil: [ 
 		ui textRepository text: repository repository.
@@ -374,12 +360,14 @@ OpenPonkGit >> showFetchRepositoryForm [
 
 { #category : #'commit-process' }
 OpenPonkGit >> startCommitProcess [
-	self showCommitCredentialsForm.
+
+	self showCommitForm
 ]
 
 { #category : #'fetch-process' }
 OpenPonkGit >> startFetchProcess [
-	self showFetchCredentialsForm.
+
+	self showFetchForm
 ]
 
 { #category : #'constants - url' }

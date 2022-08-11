@@ -56,7 +56,7 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
 
 	| paths |
-	paths := [ (self getFileBlobsOf: aCommitSha) collect: #path as: Set ]
+	paths := [ self getFileBlobs collect: #path as: Set ]
 		         on: OPGHModelDoesNotExist
 		         do: [ Set new ].
 	^ aFileCollection collect: [ :eachFile | 
@@ -93,7 +93,7 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitS
 ]
 
 { #category : #'querying-github' }
-OpenPonkGitlab >> getFileBlobsOf: aCommitSha [
+OpenPonkGitlab >> getFileBlobs [
 
 	| client response |
 	client := ZnClient new.

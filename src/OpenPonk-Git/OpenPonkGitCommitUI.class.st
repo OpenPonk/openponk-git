@@ -1,167 +1,73 @@
 Class {
 	#name : #OpenPonkGitCommitUI,
-	#superclass : #SpPresenter,
+	#superclass : #OpenPonkGitRepositoryUI,
 	#instVars : [
-		'model',
-		'labelRepository',
-		'labelBranch',
-		'labelSave',
 		'labelMsg',
-		'textRepository',
-		'textBranch',
-		'textMsg',
-		'buttonCommit',
-		'buttonCancel',
-		'checkBoxSave'
+		'textMsg'
 	],
 	#category : #'OpenPonk-Git'
 }
 
-{ #category : #'as yet unclassified' }
-OpenPonkGitCommitUI class >> defaultLayout [
+{ #category : #layout }
+OpenPonkGitCommitUI class >> addItemsTo: aLayout [
 
-	| labelsWidth |
-	labelsWidth := 180.
-	^ SpBoxLayout newTopToBottom
-		  add: (SpBoxLayout newLeftToRight
-				   spacing: 5;
-				   add: #labelRepository width: labelsWidth;
-				   add: #textRepository;
-				   yourself);
-		  add: (SpBoxLayout newLeftToRight
-				   spacing: 5;
-				   add: #labelBranch width: labelsWidth;
-				   add: #textBranch;
-				   yourself);
-		  add: (SpBoxLayout newLeftToRight
-				   spacing: 5;
-				   add: #labelSave width: labelsWidth;
-				   add: #checkBoxSave;
-				   yourself);
-		  add: (SpBoxLayout newLeftToRight
-				   spacing: 5;
-				   add: #labelMsg width: labelsWidth;
-				   add: #textMsg;
-				   yourself);
-		  add: (SpBoxLayout newLeftToRight
-				   spacing: 5;
-				   hAlignEnd;
-				   add: #buttonCancel expand: false;
-				   add: #buttonCommit expand: false;
-				   yourself);
-		  yourself
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> buttonCancel [
-	^ buttonCancel
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> buttonCancel: anObject [
-	buttonCancel := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> buttonCommit [
-	^ buttonCommit
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> buttonCommit: anObject [
-	buttonCommit := anObject
+	super addItemsTo: aLayout.
+	aLayout add: (SpBoxLayout newLeftToRight
+			 spacing: 5;
+			 add: #labelMsg width: self labelsWidth;
+			 add: #textMsg;
+			 yourself)
 ]
 
 { #category : #'as yet unclassified' }
 OpenPonkGitCommitUI >> checkAllFilled [
 
-	textRepository text trim ifEmpty: [ ^ buttonCommit disable ].
-	textBranch text trim ifEmpty: [ ^ buttonCommit disable ].
-	textMsg text trim ifEmpty: [ ^ buttonCommit disable ].
-	buttonCommit enable
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> checkBoxSave [
-	^ checkBoxSave
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> checkBoxSave: anObject [
-	checkBoxSave := anObject
+	super checkAllFilled.
+	buttonConfirm isEnabled ifFalse: [ ^ self ].
+	textMsg text trim ifEmpty: [ ^ buttonConfirm disable ].
+	buttonConfirm enable
 ]
 
 { #category : #'as yet unclassified' }
 OpenPonkGitCommitUI >> connectPresenters [
 
-	buttonCommit action: [ 
-		self window delete.
-		self model commitSet: self ].
-	buttonCancel action: [ self window delete ].
-	textRepository whenTextChangedDo: [ self checkAllFilled ].
-	textBranch whenTextChangedDo: [ self checkAllFilled ].
-	textMsg whenTextChangedDo: [ self checkAllFilled ].
-	self checkAllFilled
+	super connectPresenters.
+	
+	textMsg whenTextChangedDo: [ self checkAllFilled ]
 ]
 
 { #category : #initialization }
 OpenPonkGitCommitUI >> initializeButtons [
-	buttonCommit := self newButton.
-	buttonCancel := self newButton.
-	buttonCommit 
-		label: 'Commit'.
-	buttonCancel
-		label: 'Cancel'.
-]
 
-{ #category : #initialization }
-OpenPonkGitCommitUI >> initializeCheckBoxes [
-	checkBoxSave := self newCheckBox.
-	checkBoxSave state: false.
+	super initializeButtons.
+	buttonConfirm label: 'Commit'
 ]
 
 { #category : #initialization }
 OpenPonkGitCommitUI >> initializeFocusOrder [
-	self focusOrder 
+
+	self focusOrder
+		add: textToken;
 		add: textRepository;
 		add: textBranch;
 		add: checkBoxSave;
 		add: textMsg;
-		add: buttonCommit;
-		add: buttonCancel.
-		
+		add: buttonConfirm;
+		add: buttonCancel
 ]
 
 { #category : #initialization }
 OpenPonkGitCommitUI >> initializeLabels [
-	labelBranch := self newLabel.	
-	labelSave  := self newLabel.	
-	labelRepository  := self newLabel.	
-	labelMsg := self newLabel.	
-	
-	labelBranch label: 'Branch name'.
-	labelSave label: 'Save repository and branch?'.
-	labelRepository label: 'Repository name'.
-	labelMsg  label: 'Commit message'.
-	
-]
 
-{ #category : #'as yet unclassified' }
-OpenPonkGitCommitUI >> initializePresenters [
-	self 
-		initializeLabels;
-		initializeButtons;
-		initializeTextBoxes;
-		initializeCheckBoxes;
-		initializeFocusOrder.
+	super initializeLabels.
+	labelMsg := self newLabel.
+	labelMsg label: 'Commit message'
 ]
 
 { #category : #initialization }
 OpenPonkGitCommitUI >> initializeTextBoxes [
 
-	textBranch := self newTextInput.
-	textRepository := self newTextInput.
-	textRepository placeholder: 'owner/repository'.
+	super initializeTextBoxes.
 	textMsg := self newTextInput
 ]
 
@@ -169,86 +75,11 @@ OpenPonkGitCommitUI >> initializeTextBoxes [
 OpenPonkGitCommitUI >> initializeWindow: aWindow [
 
 	aWindow
-		initialExtent: 450 @ 184;
-		title: 'Commit form'
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelBranch [
-	^ labelBranch
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelBranch: anObject [
-	labelBranch := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelMsg [
-	^ labelMsg
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelMsg: anObject [
-	labelMsg := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelRepository [
-	^ labelRepository
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelRepository: anObject [
-	labelRepository := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelSave [
-	^ labelSave
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> labelSave: anObject [
-	labelSave := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> model [
-	^ model
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> model: anObject [
-	model := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> textBranch [
-	^ textBranch
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> textBranch: anObject [
-	textBranch := anObject
+		initialExtent: 480 @ 230;
+		title: 'Git commit'
 ]
 
 { #category : #accessing }
 OpenPonkGitCommitUI >> textMsg [
 	^ textMsg
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> textMsg: anObject [
-	textMsg := anObject
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> textRepository [
-	^ textRepository
-]
-
-{ #category : #accessing }
-OpenPonkGitCommitUI >> textRepository: anObject [
-	textRepository := anObject
 ]
