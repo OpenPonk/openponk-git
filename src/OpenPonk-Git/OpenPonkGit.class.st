@@ -95,30 +95,24 @@ OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasM
 
 { #category : #'commit-process' }
 OpenPonkGit >> commitSet: aForm [
+
+	credentials token: aForm textToken text.
 	commit repository: aForm textRepository text.
 	commit branch: aForm textBranch text.
-	aForm checkBoxSave state ifFalse: [ OPGHCommit deleteSavedInstance. ]
-		ifTrue: [ OPGHCommit savedInstance: commit. ].
+	aForm checkBoxSave state
+		ifFalse: [ 
+			OPGHCredentials deleteSavedInstance.
+			OPGHCommit deleteSavedInstance ]
+		ifTrue: [ 
+			OPGHCommit savedInstance: commit.
+			OPGHCredentials savedInstance: credentials ].
 	commit message: aForm textMsg text.
-	self setAuthor.
+	self setAuthor
 ]
 
 { #category : #accessing }
 OpenPonkGit >> credentials [
 	^ credentials
-]
-
-{ #category : #accessing }
-OpenPonkGit >> credentials: anObject [
-	credentials := anObject
-]
-
-{ #category : #'commit-process' }
-OpenPonkGit >> credentialsSet: aForm [
-	credentials token: aForm textToken text.
-	aForm checkBoxSave state ifFalse: [ OPGHCredentials deleteSavedInstance. ]
-		ifTrue: [ OPGHCredentials savedInstance: credentials. ].
-	self showCommitForm.
 ]
 
 { #category : #accessing }
