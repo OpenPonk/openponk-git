@@ -145,6 +145,22 @@ OpenPonkGit >> directorySelected: aDirectoryPath [
 	finishedAction value: projectControllers
 ]
 
+{ #category : #exceptions }
+OpenPonkGit >> errorFrom: aCollection missing: aString [
+
+	| message |
+	message := aCollection at: #message ifAbsent: [ 
+		           self apiName, ' server did not return "' , aString
+		           , '" property as part of the response' ].
+
+	(message includesSubstring: 'Not Found') ifTrue: [ 
+		message := message
+		           ,
+		           '. Git repository does not exist or your access token is invalid.' ].
+
+	self error: message
+]
+
 { #category : #'fetch-process' }
 OpenPonkGit >> fetchCredentialsFilled: aForm [
 
@@ -224,7 +240,11 @@ OpenPonkGit >> getLastCommitSha [
 	response := [ :job | 
 	            job title: 'Getting info about last repository commit'.
 	            NeoJSONReader fromString: client get ] asJob run.
-	^ lastCommitSha := (response at: 'commit') at: self shaKey
+	^ lastCommitSha := (response
+		                    at: 'commit'
+		                    ifAbsent: [ 
+		                    self errorFrom: response missing: #comming ]) 
+		                   at: self shaKey
 ]
 
 { #category : #'commit-process' }
