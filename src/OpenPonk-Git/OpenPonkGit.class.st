@@ -96,16 +96,7 @@ OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasM
 { #category : #'commit-process' }
 OpenPonkGit >> commitSet: aForm [
 
-	credentials token: aForm textToken text.
-	commit repository: aForm textRepository text.
-	commit branch: aForm textBranch text.
-	aForm checkBoxSave state
-		ifFalse: [ 
-			OPGHCredentials deleteSavedInstance.
-			OPGHCommit deleteSavedInstance ]
-		ifTrue: [ 
-			OPGHCommit savedInstance: commit.
-			OPGHCredentials savedInstance: credentials ].
+	self repositoryFilled: aForm.
 	commit message: aForm textMsg text.
 	self setAuthor
 ]
@@ -162,16 +153,6 @@ OpenPonkGit >> errorFrom: aCollection missing: aString [
 ]
 
 { #category : #'fetch-process' }
-OpenPonkGit >> fetchCredentialsFilled: aForm [
-
-	credentials token: aForm textToken text.
-	aForm checkBoxSave state
-		ifFalse: [ OPGHCredentials deleteSavedInstance ]
-		ifTrue: [ OPGHCredentials savedInstance: credentials ].
-	self showFetchForm
-]
-
-{ #category : #'fetch-process' }
 OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 
 	| fileBlobs |
@@ -184,8 +165,7 @@ OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 { #category : #'fetch-process' }
 OpenPonkGit >> fetchRepositoryFilled: aForm [
 
-	commit repository: aForm textRepository text.
-	commit branch: aForm textBranch text.
+	self repositoryFilled: aForm.
 	self showDirectoryDialog
 ]
 
@@ -303,6 +283,21 @@ OpenPonkGit >> project: anObject [
 OpenPonkGit >> reposURL [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'fetch-process' }
+OpenPonkGit >> repositoryFilled: aForm [
+
+	credentials token: aForm textToken text.
+	commit repository: aForm textRepository text.
+	commit branch: aForm textBranch text.
+	aForm checkBoxSave state
+		ifFalse: [ 
+			OPGHCredentials deleteSavedInstance.
+			OPGHCommit deleteSavedInstance ]
+		ifTrue: [ 
+			OPGHCommit savedInstance: commit.
+			OPGHCredentials savedInstance: credentials ]
 ]
 
 { #category : #'commit-process' }

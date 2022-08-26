@@ -98,8 +98,8 @@ OpenPonkGitlab >> getFileBlobs [
 	| client response |
 	client := ZnClient new.
 
-	client url: self userRepositoryURL , '/tree?path='
-		, self directoryInRepo urlEncoded.
+	client url: self userRepositoryURL , '/tree'.
+	client queryAt: #path put: self directoryInRepo.
 	self prepareGet: client.
 	response := [ :job | 
 	            job title: 'Getting list of files in repository'.
