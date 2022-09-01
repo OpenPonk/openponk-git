@@ -95,6 +95,13 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitS
 { #category : #'querying-github' }
 OpenPonkGitlab >> getFileBlobs [
 
+	^ self filterBlobs:
+		  (self getRepoItems select: [ :each | (each at: #type) = 'blob' ])
+]
+
+{ #category : #'querying-github' }
+OpenPonkGitlab >> getRepoItems [
+
 	| client response |
 	client := ZnClient new.
 
@@ -106,8 +113,7 @@ OpenPonkGitlab >> getFileBlobs [
 	            NeoJSONReader fromString: client get ] asJob run.
 	response ifEmpty: [ 
 		^ OPGHModelDoesNotExist signalModel: self directoryInRepo ].
-	^ self filterBlobs:
-		  (response select: [ :each | (each at: #type) = 'blob' ])
+	^ response
 ]
 
 { #category : #'querying-github' }
