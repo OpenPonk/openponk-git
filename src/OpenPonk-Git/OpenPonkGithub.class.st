@@ -36,15 +36,14 @@ OpenPonkGithub >> blobUrlFor: aFile [
 { #category : #'querying-github' }
 OpenPonkGithub >> commitChangesFor: aFileCollection [
 
-	| lastCommitSha treeSha commitSha |
-	lastCommitSha := self getLastCommitSha.
+	| treeSha commitSha |
 	self postBlobsFor: aFileCollection.
 	treeSha := self
 		           postTreesFor: aFileCollection
-		           withLastCommitSha: lastCommitSha.
+		           withLastCommitSha: self getLastCommitSha.
 	commitSha := self
 		             postCommitFor: aFileCollection
-		             withLastCommitSha: lastCommitSha
+		             withLastCommitSha: self getLastCommitSha
 		             withTreeSha: treeSha.
 	self postBranchHeadFor: commitSha.
 	self informCommited

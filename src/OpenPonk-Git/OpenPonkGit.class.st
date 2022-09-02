@@ -82,12 +82,8 @@ OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasM
 	pngFile := projectFile withExtension: 'png'.
 	aCanvasModel exportCanvasToPng: pngFile.
 	self commitChangesFor: { 
-			(OPGHFile
-				 withPath: projectFile basename
-				 relativeTo: projectFile parent pathString).
-			(OPGHFile
-				 withPath: pngFile basename
-				 relativeTo: pngFile parent pathString) }.
+			(OPGHFile withPath: projectFile basename file: projectFile).
+			(OPGHFile withPath: pngFile basename file: projectFile) }.
 	finishedAction value: { 
 			projectFile.
 			pngFile }
@@ -98,12 +94,17 @@ OpenPonkGit >> commitSet: aForm [
 
 	self repositoryFilled: aForm.
 	commit message: aForm textMsg text.
-	self setAuthor
+	self findAuthorAndProceed
 ]
 
 { #category : #accessing }
 OpenPonkGit >> credentials [
 	^ credentials
+]
+
+{ #category : #accessing }
+OpenPonkGit >> credentials: anOPGHCredentials [ 
+	credentials := anOPGHCredentials
 ]
 
 { #category : #accessing }
@@ -182,6 +183,22 @@ OpenPonkGit >> filterBlobs: blobDictionaryCollection [
 ]
 
 { #category : #'commit-process' }
+OpenPonkGit >> findAuthorAndProceed [
+
+	| client response |
+	client := ZnClient new.
+	client url: self apiURL , '/user'.
+	self prepareGet: client.
+	response := [ :job | 
+	            job title: 'Getting your name and email address'.
+	            NeoJSONReader fromString: client get ] asJob run.
+	author name: ((response at: 'name') ifNil: [ 
+			 ^ self error: 'Cannot get your name from git' ]).
+	author email: ((response at: 'email') ifNil: [ self getAuthorEmail ]).
+	self commitChangesForProject: project withDiagram: diagram
+]
+
+{ #category : #'commit-process' }
 OpenPonkGit >> getAuthorEmail [
 
 	| options |
@@ -197,10 +214,11 @@ OpenPonkGit >> getContentFor: aFile [
 	client url: (self blobUrlFor: aFile).
 	self prepareGet: client.
 	response := [ :job | 
-	            job title: 'Getting contents of ' , aFile path.
+	            job title: 'Getting contents of ' , aFile pathInRepo.
 	            NeoJSONReader fromString: client get ] asJob run.
 	aFile content: (response at: 'content').
-	aFile encoding: (response at: 'encoding')
+	aFile encoding: (response at: 'encoding').
+	^ aFile contentDecoded
 ]
 
 { #category : #'querying-github' }
@@ -249,12 +267,12 @@ OpenPonkGit >> informCommited [
 OpenPonkGit >> initialize [
 
 	super initialize.
-	
+
 	author := OPGHAuthor getInstance.
 	credentials := OPGHCredentials getInstance.
 	commit := OPGHCommit getInstance.
 
-	finishedAction := [ :items |  ]
+	finishedAction := [ :items | items ]
 ]
 
 { #category : #'querying-github' }
@@ -298,22 +316,6 @@ OpenPonkGit >> repositoryFilled: aForm [
 		ifTrue: [ 
 			OPGHCommit savedInstance: commit.
 			OPGHCredentials savedInstance: credentials ]
-]
-
-{ #category : #'commit-process' }
-OpenPonkGit >> setAuthor [
-
-	| client response |
-	client := ZnClient new.
-	client url: self apiURL , '/user'.
-	self prepareGet: client.
-	response := [ :job | 
-	            job title: 'Getting your name and email address'.
-	            NeoJSONReader fromString: client get ] asJob run.
-	author name: ((response at: 'name') ifNil: [ 
-			 ^ self error: 'Cannot get your name from git' ]).
-	author email: ((response at: 'email') ifNil: [ self getAuthorEmail ]).
-	self commitChangesForProject: project withDiagram: diagram
 ]
 
 { #category : #'querying-github' }

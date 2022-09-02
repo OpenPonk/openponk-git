@@ -36,14 +36,12 @@ OpenPonkGitlab >> blobUrlFor: aFile [
 { #category : #'querying-github' }
 OpenPonkGitlab >> commitChangesFor: aFileCollection [
 
-	| lastCommitSha client response |
-	lastCommitSha := self getLastCommitSha.
+	| client response |
 	client := ZnClient new.
 	client url: self userRepositoryURL , '/commits'.
-	client entity:
-		(self
+	client entity: (self
 			 getCommitEntityFor: aFileCollection
-			 withCommitSha: lastCommitSha).
+			 withCommitSha: self getLastCommitSha).
 	self preparePost: client.
 	response := [ :job | 
 	            job title: 'Uploading commit to repository'.
@@ -56,15 +54,15 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
 
 	| paths |
-	paths := [ self getFileBlobs collect: #path as: Set ]
+	paths := [ self getFileBlobs collect: #pathInRepo as: Set ]
 		         on: OPGHModelDoesNotExist
 		         do: [ Set new ].
 	^ aFileCollection collect: [ :eachFile | 
 		  { 
-			  ('action' -> ((paths includes: eachFile path)
+			  ('action' -> ((paths includes: eachFile pathInRepo)
 				    ifTrue: [ 'update' ]
 				    ifFalse: [ 'create' ])).
-			  ('file_path' -> eachFile path).
+			  ('file_path' -> eachFile pathInRepo).
 			  ('encoding' -> 'base64').
 			  ('content' -> eachFile contentBase64 contents) } asDictionary ]
 ]
@@ -106,6 +104,7 @@ OpenPonkGitlab >> getRepoItems [
 	client := ZnClient new.
 
 	client url: self userRepositoryURL , '/tree'.
+	client queryAt: #ref put: commit branch.
 	client queryAt: #path put: self directoryInRepo.
 	self prepareGet: client.
 	response := [ :job | 

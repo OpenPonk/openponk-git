@@ -34,7 +34,8 @@ OPGHCommit class >> savedInstance: aInstance [
 
 { #category : #accessing }
 OPGHCommit >> branch [
-	^ branch
+
+	^ branch ifNil: [ 'master' ]
 ]
 
 { #category : #accessing }
