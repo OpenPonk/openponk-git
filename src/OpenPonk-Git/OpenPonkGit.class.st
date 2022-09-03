@@ -218,7 +218,9 @@ OpenPonkGit >> getContentFor: aFile [
 	            NeoJSONReader fromString: client get ] asJob run.
 	aFile content: (response at: 'content').
 	aFile encoding: (response at: 'encoding').
-	^ aFile contentDecoded
+	(aFile localFile basename endsWith: '.json') ifTrue: [ 
+		^ aFile contentDecoded ].
+	^ aFile binaryContent
 ]
 
 { #category : #'querying-github' }

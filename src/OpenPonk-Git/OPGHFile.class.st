@@ -31,6 +31,12 @@ OPGHFile class >> withPath: aPath withSha: aBlobSha [
 ]
 
 { #category : #accessing }
+OPGHFile >> binaryContent [
+
+	^ content base64Decoded
+]
+
+{ #category : #accessing }
 OPGHFile >> blobSha [
 	^ blobSha.
 ]
@@ -56,7 +62,7 @@ OPGHFile >> contentBase64 [
 { #category : #accessing }
 OPGHFile >> contentDecoded [
 
-	^ content base64Decoded asString
+	^ self binaryContent utf8Decoded
 ]
 
 { #category : #accessing }
