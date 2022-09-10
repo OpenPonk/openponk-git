@@ -112,6 +112,12 @@ OpenPonkGitlab >> getRepoItems [
 	            NeoJSONReader fromString: client get ] asJob run.
 	response ifEmpty: [ 
 		^ OPGHModelDoesNotExist signalModel: self directoryInRepo ].
+	client response statusLine code >= 300 ifTrue: [ 
+		^ self error: (String streamContents: [ :s | 
+				   s << client response statusLine code asString << ' on GitLab'.
+				   response
+					   at: #message
+					   ifPresent: [ :message | s << ': ' << message asString ] ]) ].
 	^ response
 ]
 
