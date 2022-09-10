@@ -46,13 +46,5 @@ OpenPonkGitMenuRegistration class >> toolbarMenuItemsFor: aBuilder [
 	(aBuilder item: 'Download project from GitLab.com')
 		parent: #opgit;
 		iconName: #gitlab;
-		action: [ downloadBlock value: OpenPonkGitlab ].
-	(aBuilder item: 'Upload project to gitlab.fit.cvut.cz')
-		parent: #opgit;
-		iconName: #gitlab;
-		action: [ uploadBlock value: OpenPonkGitlabFit ].
-	(aBuilder item: 'Download project from gitlab.fit.cvut.cz')
-		parent: #opgit;
-		iconName: #gitlab;
-		action: [ downloadBlock value: OpenPonkGitlabFit ]
+		action: [ downloadBlock value: OpenPonkGitlab ]
 ]

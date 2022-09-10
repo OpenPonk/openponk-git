@@ -1,6 +1,9 @@
 Class {
 	#name : #OpenPonkGitlab,
 	#superclass : #OpenPonkGit,
+	#instVars : [
+		'apiDomain'
+	],
 	#category : #'OpenPonk-Git'
 }
 
@@ -16,15 +19,34 @@ OpenPonkGitlab >> addTokenTo: client [
 	client headerAt: 'PRIVATE-TOKEN' put: credentials token
 ]
 
+{ #category : #'constants - url' }
+OpenPonkGitlab >> apiDomain [
+
+	^ apiDomain ifNil: [ 'gitlab.com' ]
+]
+
+{ #category : #'constants - url' }
+OpenPonkGitlab >> apiDomain: aString [
+
+	apiDomain := aString
+]
+
 { #category : #'as yet unclassified' }
 OpenPonkGitlab >> apiName [
 
-	^ 'GitLab.com'
+	^ self apiDomain
 ]
 
 { #category : #'constants - url' }
 OpenPonkGitlab >> apiURL [
-	^ 'https://gitlab.com/api/v4'
+
+	^ 'https://' , self apiDomain , '/' , self apiVersionPath
+]
+
+{ #category : #'as yet unclassified' }
+OpenPonkGitlab >> apiVersionPath [
+
+	^ 'api/v4'
 ]
 
 { #category : #'querying-github' }
