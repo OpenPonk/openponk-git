@@ -1,6 +1,6 @@
 Class {
-	#name : #OPGHFile,
-	#superclass : #Object,
+	#name : 'OPGHFile',
+	#superclass : 'Object',
 	#instVars : [
 		'blobSha',
 		'pathInRepo',
@@ -8,10 +8,11 @@ Class {
 		'content',
 		'encoding'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #navigating }
+{ #category : 'navigating' }
 OPGHFile class >> withPath: aPath file: aFileReference [
 
 	^ self new
@@ -20,7 +21,7 @@ OPGHFile class >> withPath: aPath file: aFileReference [
 		  yourself
 ]
 
-{ #category : #navigating }
+{ #category : 'navigating' }
 OPGHFile class >> withPath: aPath withSha: aBlobSha [
 
 	| file |
@@ -30,28 +31,28 @@ OPGHFile class >> withPath: aPath withSha: aBlobSha [
 	^ file
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> binaryContent [
 
 	^ content base64Decoded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> blobSha [
 	^ blobSha.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> blobSha: aShaString [
 	blobSha := aShaString.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> content: anObject [
 	^ content := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> contentBase64 [
 
 	^ content ifNil: [ 
@@ -59,59 +60,59 @@ OPGHFile >> contentBase64 [
 			             base64Encoded ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> contentDecoded [
 
 	^ self binaryContent utf8Decoded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> encoding [
 	^ encoding.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> encoding: aString [
 	encoding := aString.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> extension [
 	^ localFile asPath extension
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> localFile [
 
 	^ localFile ifNil: [ self pathInRepo asFileReference ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> localFile: anObject [
 
 	localFile := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> localFileIn: aDirectory [
 
 	self assert: self pathInRepo isNotNil.
 	self localFile: aDirectory / self pathInRepo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> pathInRepo [
 
 	^ pathInRepo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHFile >> pathInRepo: aPathString [
 
 	pathInRepo := aPathString
 ]
 
-{ #category : #fileout }
+{ #category : 'fileout' }
 OPGHFile >> saveBinary [
 
 	| file |
@@ -121,7 +122,7 @@ OPGHFile >> saveBinary [
 		stream nextPutAll: content base64Decoded ]
 ]
 
-{ #category : #fileout }
+{ #category : 'fileout' }
 OPGHFile >> saveText [
 
 	| file |
@@ -133,7 +134,7 @@ OPGHFile >> saveText [
 			nextPutAll: content ]
 ]
 
-{ #category : #fileout }
+{ #category : 'fileout' }
 OPGHFile >> saveTo: aDirectoryPath [
 
 	self localFileIn: aDirectoryPath.

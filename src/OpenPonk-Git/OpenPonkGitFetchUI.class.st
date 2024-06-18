@@ -1,17 +1,18 @@
 Class {
-	#name : #OpenPonkGitFetchUI,
-	#superclass : #OpenPonkGitRepositoryUI,
-	#category : #'OpenPonk-Git'
+	#name : 'OpenPonkGitFetchUI',
+	#superclass : 'OpenPonkGitRepositoryUI',
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitFetchUI >> initializeButtons [
 
 	super initializeButtons.
 	buttonConfirm label: 'Fetch'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitFetchUI >> initializeFocusOrder [
 
 	self focusOrder
@@ -23,7 +24,7 @@ OpenPonkGitFetchUI >> initializeFocusOrder [
 		add: buttonCancel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitFetchUI >> initializeWindow: aWindow [
 
 	aWindow

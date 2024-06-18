@@ -1,10 +1,11 @@
 Class {
-	#name : #OpenPonkGitMenuRegistration,
-	#superclass : #Object,
-	#category : #'OpenPonk-Git'
+	#name : 'OpenPonkGitMenuRegistration',
+	#superclass : 'Object',
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #toolbar }
+{ #category : 'toolbar' }
 OpenPonkGitMenuRegistration class >> toolbarMenu: aBuilder [
 
 	<opEditorToolbarMenu: #OPUmlClassEditorPlugin>
@@ -16,7 +17,7 @@ OpenPonkGitMenuRegistration class >> toolbarMenu: aBuilder [
 	self toolbarMenuItemsFor: aBuilder
 ]
 
-{ #category : #toolbar }
+{ #category : 'toolbar' }
 OpenPonkGitMenuRegistration class >> toolbarMenuItemsFor: aBuilder [
 
 	| uploadBlock downloadBlock |

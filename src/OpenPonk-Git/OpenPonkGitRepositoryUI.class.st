@@ -1,6 +1,6 @@
 Class {
-	#name : #OpenPonkGitRepositoryUI,
-	#superclass : #SpPresenter,
+	#name : 'OpenPonkGitRepositoryUI',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'model',
 		'labelRepository',
@@ -15,10 +15,11 @@ Class {
 		'labelToken',
 		'textToken'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 OpenPonkGitRepositoryUI class >> addItemsTo: aLayout [
 
 	aLayout
@@ -44,7 +45,7 @@ OpenPonkGitRepositoryUI class >> addItemsTo: aLayout [
 				 yourself)
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OpenPonkGitRepositoryUI class >> defaultLayout [
 
 	| innerLayout |
@@ -59,13 +60,13 @@ OpenPonkGitRepositoryUI class >> defaultLayout [
 	^ innerLayout
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OpenPonkGitRepositoryUI class >> labelsWidth [
 
 	^ 180
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitRepositoryUI >> checkAllFilled [
 
 	textToken text trim ifEmpty: [ ^ buttonConfirm disable ].
@@ -74,12 +75,12 @@ OpenPonkGitRepositoryUI >> checkAllFilled [
 	buttonConfirm enable
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> checkBoxSave [
 	^ checkBoxSave
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitRepositoryUI >> connectPresenters [
 
 	super connectPresenters.
@@ -94,14 +95,14 @@ OpenPonkGitRepositoryUI >> connectPresenters [
 	self checkAllFilled
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initialize [
 
 	onConfirm := [  ].
 	super initialize
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializeButtons [
 	buttonConfirm := self newButton.
 	buttonCancel := self newButton.
@@ -111,19 +112,19 @@ OpenPonkGitRepositoryUI >> initializeButtons [
 		label: 'Cancel'.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializeCheckBoxes [
 	checkBoxSave := self newCheckBox.
 	checkBoxSave state: false.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializeFocusOrder [
 
 	self subclassResponsibility
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializeLabels [
 
 	labelToken := self newLabel.
@@ -137,7 +138,7 @@ OpenPonkGitRepositoryUI >> initializeLabels [
 	labelRepository label: 'Repository name'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitRepositoryUI >> initializePresenters [
 	self 
 		initializeLabels;
@@ -147,7 +148,7 @@ OpenPonkGitRepositoryUI >> initializePresenters [
 		initializeFocusOrder.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializeTextBoxes [
 
 	textToken := self newTextInput.
@@ -156,33 +157,33 @@ OpenPonkGitRepositoryUI >> initializeTextBoxes [
 	textRepository placeholder: 'owner/repository'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> model [
 	^ model
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> model: anObject [
 	model := anObject
 ]
 
-{ #category : #enumerating }
+{ #category : 'enumerating' }
 OpenPonkGitRepositoryUI >> onConfirmDo: aBlock [
 
 	onConfirm := aBlock
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> textBranch [
 	^ textBranch
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> textRepository [
 	^ textRepository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitRepositoryUI >> textToken [
 	^ textToken
 ]

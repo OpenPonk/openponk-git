@@ -1,61 +1,62 @@
 Class {
-	#name : #OpenPonkGitlab,
-	#superclass : #OpenPonkGit,
+	#name : 'OpenPonkGitlab',
+	#superclass : 'OpenPonkGit',
 	#instVars : [
 		'apiDomain'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 OpenPonkGitlab >> addContentTypeTo: client [
 
 	client contentType: ZnMimeType applicationJson
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> addTokenTo: client [
 
 	client headerAt: 'PRIVATE-TOKEN' put: credentials token
 ]
 
-{ #category : #'constants - url' }
+{ #category : 'constants - url' }
 OpenPonkGitlab >> apiDomain [
 
 	^ apiDomain ifNil: [ 'gitlab.com' ]
 ]
 
-{ #category : #'constants - url' }
+{ #category : 'constants - url' }
 OpenPonkGitlab >> apiDomain: aString [
 
 	apiDomain := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitlab >> apiName [
 
 	^ self apiDomain
 ]
 
-{ #category : #'constants - url' }
+{ #category : 'constants - url' }
 OpenPonkGitlab >> apiURL [
 
 	^ 'https://' , self apiDomain , '/' , self apiVersionPath
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitlab >> apiVersionPath [
 
 	^ 'api/v4'
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> blobUrlFor: aFile [
 
 	^ self userRepositoryURL , '/blobs/' , aFile blobSha
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> commitChangesFor: aFileCollection [
 
 	| client response |
@@ -72,7 +73,7 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 	^ response at: self shaKey
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
 
 	| paths |
@@ -89,7 +90,7 @@ OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitS
 			  ('content' -> eachFile contentBase64 contents) } asDictionary ]
 ]
 
-{ #category : #'commit-process' }
+{ #category : 'commit-process' }
 OpenPonkGitlab >> getAuthorEmail [
 
 	| options |
@@ -98,7 +99,7 @@ OpenPonkGitlab >> getAuthorEmail [
 		   (any at: #primary) and: [ any at: #verified ] ]) at: #email
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitSha [
 
 	| actions |
@@ -112,14 +113,14 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitS
 				   ('actions' -> actions) } asDictionary)
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> getFileBlobs [
 
 	^ self filterBlobs:
 		  (self getRepoItems select: [ :each | (each at: #type) = 'blob' ])
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> getRepoItems [
 
 	| client response |
@@ -143,26 +144,26 @@ OpenPonkGitlab >> getRepoItems [
 	^ response
 ]
 
-{ #category : #'querying-github' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> preparePost: client [
 
 	super preparePost: client.
 	self addContentTypeTo: client
 ]
 
-{ #category : #'constants - url' }
+{ #category : 'constants - url' }
 OpenPonkGitlab >> reposURL [
 
 	^ self apiURL , '/projects'
 ]
 
-{ #category : #hooks }
+{ #category : 'hooks' }
 OpenPonkGitlab >> shaKey [
 
 	^ 'id'
 ]
 
-{ #category : #'constants - url' }
+{ #category : 'constants - url' }
 OpenPonkGitlab >> userRepositoryURL [
 
 	^ self reposURL , '/' , commit repository urlEncoded , '/repository'

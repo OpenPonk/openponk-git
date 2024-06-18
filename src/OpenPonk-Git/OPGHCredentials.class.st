@@ -1,43 +1,44 @@
 Class {
-	#name : #OPGHCredentials,
-	#superclass : #Object,
+	#name : 'OPGHCredentials',
+	#superclass : 'Object',
 	#instVars : [
 		'token'
 	],
 	#classInstVars : [
 		'savedInstance'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials class >> deleteSavedInstance [
 
 	savedInstance := nil
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials class >> getInstance [
 	^ savedInstance ifNil: [ ^ self new. ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials class >> savedInstance [
 	^ savedInstance.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials class >> savedInstance: aInstance [
 
 	savedInstance := aInstance
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials >> token [
 	^ token.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCredentials >> token: aString [
 	token := aString.
 ]

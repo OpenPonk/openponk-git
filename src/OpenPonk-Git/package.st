@@ -1,1 +1,1 @@
-Package { #name : #'OpenPonk-Git' }
+Package { #name : 'OpenPonk-Git' }

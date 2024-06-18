@@ -1,14 +1,15 @@
 Class {
-	#name : #OpenPonkGitCommitUI,
-	#superclass : #OpenPonkGitRepositoryUI,
+	#name : 'OpenPonkGitCommitUI',
+	#superclass : 'OpenPonkGitRepositoryUI',
 	#instVars : [
 		'labelMsg',
 		'textMsg'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 OpenPonkGitCommitUI class >> addItemsTo: aLayout [
 
 	super addItemsTo: aLayout.
@@ -19,7 +20,7 @@ OpenPonkGitCommitUI class >> addItemsTo: aLayout [
 			 yourself)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitCommitUI >> checkAllFilled [
 
 	super checkAllFilled.
@@ -28,7 +29,7 @@ OpenPonkGitCommitUI >> checkAllFilled [
 	buttonConfirm enable
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OpenPonkGitCommitUI >> connectPresenters [
 
 	super connectPresenters.
@@ -36,14 +37,14 @@ OpenPonkGitCommitUI >> connectPresenters [
 	textMsg whenTextChangedDo: [ self checkAllFilled ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> initializeButtons [
 
 	super initializeButtons.
 	buttonConfirm label: 'Commit'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> initializeFocusOrder [
 
 	self focusOrder
@@ -56,7 +57,7 @@ OpenPonkGitCommitUI >> initializeFocusOrder [
 		add: buttonCancel
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> initializeLabels [
 
 	super initializeLabels.
@@ -64,14 +65,14 @@ OpenPonkGitCommitUI >> initializeLabels [
 	labelMsg label: 'Commit message'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> initializeTextBoxes [
 
 	super initializeTextBoxes.
 	textMsg := self newTextInput
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 OpenPonkGitCommitUI >> initializeWindow: aWindow [
 
 	aWindow
@@ -79,7 +80,7 @@ OpenPonkGitCommitUI >> initializeWindow: aWindow [
 		title: 'Git commit'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OpenPonkGitCommitUI >> textMsg [
 	^ textMsg
 ]

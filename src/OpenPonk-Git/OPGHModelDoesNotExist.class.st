@@ -1,13 +1,14 @@
 Class {
-	#name : #OPGHModelDoesNotExist,
-	#superclass : #Error,
+	#name : 'OPGHModelDoesNotExist',
+	#superclass : 'Error',
 	#instVars : [
 		'name'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 OPGHModelDoesNotExist class >> signalModel: aString [
 
 	self new
@@ -15,7 +16,7 @@ OPGHModelDoesNotExist class >> signalModel: aString [
 		signal
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHModelDoesNotExist >> messageText [
 
 	^ messageText ifNil: [ 
@@ -25,7 +26,7 @@ OPGHModelDoesNotExist >> messageText [
 			  'There is no model named "' , name , '" in the repository.' ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHModelDoesNotExist >> name: aString [ 
 	name := aString
 ]

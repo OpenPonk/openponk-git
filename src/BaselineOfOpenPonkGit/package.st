@@ -1,1 +1,1 @@
-Package { #name : #BaselineOfOpenPonkGit }
+Package { #name : 'BaselineOfOpenPonkGit' }

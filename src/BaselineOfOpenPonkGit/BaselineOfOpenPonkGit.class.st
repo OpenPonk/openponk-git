@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfOpenPonkGit,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfOpenPonkGit
+	#name : 'BaselineOfOpenPonkGit',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfOpenPonkGit',
+	#package : 'BaselineOfOpenPonkGit'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfOpenPonkGit >> baseline: spec [
 	<baseline>
 	spec

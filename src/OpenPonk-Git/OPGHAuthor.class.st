@@ -1,6 +1,6 @@
 Class {
-	#name : #OPGHAuthor,
-	#superclass : #Object,
+	#name : 'OPGHAuthor',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'email'
@@ -8,35 +8,36 @@ Class {
 	#classInstVars : [
 		'savedInstance'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHAuthor class >> deleteSavedInstance [
 	savedInstance := nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHAuthor class >> getInstance [
 	^ savedInstance ifNil: [ ^ self new. ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHAuthor class >> hasSavedInstance [
 	^ savedInstance notNil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHAuthor class >> savedInstance [
 	^ savedInstance.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHAuthor class >> savedInstance: aInstance [
 	 savedInstance := aInstance.
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OPGHAuthor class >> withName: aName withEmail: aEmail [
 	| instance |
 	instance := self new.
@@ -44,37 +45,37 @@ OPGHAuthor class >> withName: aName withEmail: aEmail [
 		email: aEmail.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> email [
 	^ email.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> email: aString [
 	email := aString.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> name [
 	^ name.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> name: aString [
 	name := aString.
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> valid [
 	^ self validName and: [ self validEmail ].
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> validEmail [
 	^ email ~= '' and: [ email includes: '@'. ].
 ]
 
-{ #category : #access }
+{ #category : 'access' }
 OPGHAuthor >> validName [
 	^ name ~= ''.
 ]

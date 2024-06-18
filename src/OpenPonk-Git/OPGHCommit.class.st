@@ -1,6 +1,6 @@
 Class {
-	#name : #OPGHCommit,
-	#superclass : #Object,
+	#name : 'OPGHCommit',
+	#superclass : 'Object',
 	#instVars : [
 		'repository',
 		'branch',
@@ -9,56 +9,57 @@ Class {
 	#classInstVars : [
 		'savedInstance'
 	],
-	#category : #'OpenPonk-Git'
+	#category : 'OpenPonk-Git',
+	#package : 'OpenPonk-Git'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit class >> deleteSavedInstance [
 	savedInstance := nil.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit class >> getInstance [
 	^ savedInstance ifNil: [ ^ self new. ].
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit class >> savedInstance [
 	^ savedInstance.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit class >> savedInstance: aInstance [
 	 savedInstance := aInstance.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> branch [
 
 	^ branch ifNil: [ 'master' ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> branch: anObject [
 	branch := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> message [
 	^ message
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> message: anObject [
 	message := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> repository [
 	^ repository
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OPGHCommit >> repository: anObject [
 	repository := anObject
 ]
