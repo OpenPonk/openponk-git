@@ -81,7 +81,7 @@ OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasM
 	projectFile := aProjectController project storageFile ifNil: [ 
 		               ^ self error: 'Saving project failed' ].
 	pngFile := projectFile withExtension: 'png'.
-	aCanvasModel exportCanvasToPng: pngFile.
+	aCanvasModel exportAsPng: pngFile.
 	self commitChangesFor: { 
 			(OPGHFile withPath: projectFile basename file: projectFile).
 			(OPGHFile withPath: pngFile basename file: projectFile) }.
