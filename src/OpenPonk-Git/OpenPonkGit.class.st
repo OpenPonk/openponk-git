@@ -349,7 +349,7 @@ OpenPonkGit >> showCommitForm [
 { #category : 'fetch-process' }
 OpenPonkGit >> showDirectoryDialog [
 
-	StFBOpenDirectoryDialog chooseThenDo: [ :directory | 
+	StOpenDirectoryPresenter chooseThenDo: [ :directory | 
 		self directorySelected: directory pathString ]
 ]
 
