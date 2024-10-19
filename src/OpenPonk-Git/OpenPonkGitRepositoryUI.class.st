@@ -80,7 +80,7 @@ OpenPonkGitRepositoryUI >> checkBoxSave [
 	^ checkBoxSave
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> connectPresenters [
 
 	super connectPresenters.

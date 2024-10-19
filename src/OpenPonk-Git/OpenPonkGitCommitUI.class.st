@@ -29,7 +29,7 @@ OpenPonkGitCommitUI >> checkAllFilled [
 	buttonConfirm enable
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> connectPresenters [
 
 	super connectPresenters.
@@ -72,9 +72,10 @@ OpenPonkGitCommitUI >> initializeTextBoxes [
 	textMsg := self newTextInput
 ]
 
-{ #category : 'api' }
+{ #category : 'initialization' }
 OpenPonkGitCommitUI >> initializeWindow: aWindow [
 
+	super initializeWindow: aWindow.
 	aWindow
 		initialExtent: 480 @ 230;
 		title: 'Git commit'

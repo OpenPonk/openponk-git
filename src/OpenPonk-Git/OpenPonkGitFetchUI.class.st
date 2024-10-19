@@ -27,6 +27,7 @@ OpenPonkGitFetchUI >> initializeFocusOrder [
 { #category : 'initialization' }
 OpenPonkGitFetchUI >> initializeWindow: aWindow [
 
+	super initializeWindow: aWindow.
 	aWindow
 		initialExtent: 450 @ 200;
 		title: 'Git fetch'

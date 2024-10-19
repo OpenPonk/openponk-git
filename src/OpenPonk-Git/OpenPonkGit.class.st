@@ -8,7 +8,8 @@ Class {
 		'project',
 		'diagram',
 		'finishedAction',
-		'lastCommitSha'
+		'lastCommitSha',
+		'spApplication'
 	],
 	#category : 'OpenPonk-Git',
 	#package : 'OpenPonk-Git'
@@ -21,6 +22,14 @@ OpenPonkGit class >> withProject: aProjectController withDiagram: aCanvasModel [
 	instance project: aProjectController.
 	instance diagram: aCanvasModel.
 	^ instance.
+]
+
+{ #category : 'instance creation' }
+OpenPonkGit class >> withSpApplication: aSpApplication [
+
+	^ self new
+		  spApplication: aSpApplication;
+		  yourself
 ]
 
 { #category : 'adding' }
@@ -331,15 +340,15 @@ OpenPonkGit >> shaKey [
 OpenPonkGit >> showCommitForm [
 
 	| ui savedCommit savedCredentials |
-	ui := OpenPonkGitCommitUI new.
+	ui := OpenPonkGitCommitUI newApplication: self spApplication.
 	ui model: self.
 	ui onConfirmDo: [ self commitSet: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
-	savedCredentials ifNotNil: [ 
+	savedCredentials ifNotNil: [
 		ui textToken text: savedCredentials token.
 		ui checkBoxSave state: true ].
 	savedCommit := OPGHCommit savedInstance.
-	savedCommit ifNotNil: [ 
+	savedCommit ifNotNil: [
 		ui textRepository text: savedCommit repository.
 		ui textBranch text: savedCommit branch.
 		ui checkBoxSave state: true ].
@@ -357,19 +366,31 @@ OpenPonkGit >> showDirectoryDialog [
 OpenPonkGit >> showFetchForm [
 
 	| ui repository savedCredentials |
-	ui := OpenPonkGitFetchUI new.
+	ui := OpenPonkGitFetchUI newApplication: self spApplication.
 	ui model: self.
 	ui onConfirmDo: [ self fetchRepositoryFilled: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
-	savedCredentials ifNotNil: [ 
+	savedCredentials ifNotNil: [
 		ui textToken text: savedCredentials token.
 		ui checkBoxSave state: true ].
 	repository := OPGHCommit savedInstance.
-	repository ifNotNil: [ 
+	repository ifNotNil: [
 		ui textRepository text: repository repository.
 		ui textBranch text: repository branch.
 		ui checkBoxSave state: true ].
 	ui open
+]
+
+{ #category : 'accessing' }
+OpenPonkGit >> spApplication [
+
+	^ spApplication ifNil: [ diagram application ]
+]
+
+{ #category : 'accessing' }
+OpenPonkGit >> spApplication: aSpApplication [
+
+	spApplication := aSpApplication
 ]
 
 { #category : 'commit-process' }

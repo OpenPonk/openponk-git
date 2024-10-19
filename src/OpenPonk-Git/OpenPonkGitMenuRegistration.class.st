@@ -21,13 +21,14 @@ OpenPonkGitMenuRegistration class >> toolbarMenu: aBuilder [
 OpenPonkGitMenuRegistration class >> toolbarMenuItemsFor: aBuilder [
 
 	| uploadBlock downloadBlock |
-	uploadBlock := [ :class | 
+	uploadBlock := [ :class |
 	               (class
 		                withProject:
 		                aBuilder model workbench projectController
 		                withDiagram: aBuilder model canvasPresenter)
 		               startCommitProcess ].
-	downloadBlock := [ :class | class new startFetchProcess ].
+	downloadBlock := [ :class |
+	                 (class withSpApplication: aBuilder model application) startFetchProcess ].
 	(aBuilder item: #opgit)
 		action: [  ];
 		label: 'Git model repository';
