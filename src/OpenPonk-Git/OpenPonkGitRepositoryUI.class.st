@@ -84,10 +84,10 @@ OpenPonkGitRepositoryUI >> checkBoxSave [
 OpenPonkGitRepositoryUI >> connectPresenters [
 
 	super connectPresenters.
-	buttonConfirm action: [ 
+	buttonConfirm action: [
 		onConfirm value.
-		self window delete ].
-	buttonCancel action: [ self window delete ].
+		self window close ].
+	buttonCancel action: [ self window close ].
 
 	textToken whenTextChangedDo: [ self checkAllFilled ].
 	textRepository whenTextChangedDo: [ self checkAllFilled ].
