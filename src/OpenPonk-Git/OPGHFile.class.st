@@ -118,6 +118,7 @@ OPGHFile >> saveBinary [
 	| file |
 	file := localFile asFileReference.
 	file parent ensureCreateDirectory.
+	file ensureDelete.
 	file binaryWriteStreamDo: [ :stream | 
 		stream nextPutAll: content base64Decoded ]
 ]
@@ -128,6 +129,7 @@ OPGHFile >> saveText [
 	| file |
 	file := localFile asFileReference.
 	file parent ensureCreateDirectory.
+	file ensureDelete.
 	file writeStreamDo: [ :stream | 
 		stream
 			truncate;
