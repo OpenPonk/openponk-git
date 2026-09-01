@@ -1,3 +1,6 @@
+"
+I am the abstract base class orchestrating Git integration within OpenPonk. I handle the high-level workflow for fetching projects from and committing changes to remote Git repositories via their respective APIs.
+"
 Class {
 	#name : 'OpenPonkGit',
 	#superclass : 'Object',
@@ -38,7 +41,7 @@ OpenPonkGit >> addTokenTo: client [
 	self subclassResponsibility
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'constants' }
 OpenPonkGit >> apiName [
 
 	^ 'Git'

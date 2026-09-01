@@ -1,3 +1,6 @@
+"
+I represent the target and metadata of a Git commit operation, including the target repository URL, branch name, and commit message. I provide a mechanism to persist this information globally across the session.
+"
 Class {
 	#name : 'OPGHCommit',
 	#superclass : 'Object',
@@ -13,7 +16,7 @@ Class {
 	#package : 'OpenPonk-Git'
 }
 
-{ #category : 'accessing' }
+{ #category : 'actions' }
 OPGHCommit class >> deleteSavedInstance [
 	savedInstance := nil.
 ]

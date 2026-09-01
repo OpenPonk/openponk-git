@@ -1,3 +1,6 @@
+"
+I implement the OpenPonk Git integration specifically for the GitHub REST API. I manage the low-level API calls required to create blobs, trees, commits, and update branch references.
+"
 Class {
 	#name : 'OpenPonkGithub',
 	#superclass : 'OpenPonkGit',
@@ -5,7 +8,7 @@ Class {
 	#package : 'OpenPonk-Git'
 }
 
-{ #category : 'as yet unclassified' }
+{ #category : 'adding' }
 OpenPonkGithub >> addAcceptTo: client [
 
 	client headerAt: 'Accept' put: 'application/vnd.github.v3+json'
@@ -17,7 +20,7 @@ OpenPonkGithub >> addTokenTo: client [
 	client headerAt: 'Authorization' put: 'token ' , credentials token
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'constants' }
 OpenPonkGithub >> apiName [
 
 	^ 'GitHub'
@@ -214,14 +217,14 @@ OpenPonkGithub >> postTreesFor: aFileCollection withLastCommitSha: aLastCommitSh
 	^ response at: self shaKey
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'querying-github' }
 OpenPonkGithub >> prepareGet: client [
 
 	super prepareGet: client.
 	self addAcceptTo: client
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'querying-github' }
 OpenPonkGithub >> preparePost: client [
 
 	super preparePost: client.

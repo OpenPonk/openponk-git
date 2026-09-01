@@ -1,3 +1,6 @@
+"
+I am an error raised when a requested model or project file cannot be located within the targeted Git repository during a fetch operation.
+"
 Class {
 	#name : 'OPGHModelDoesNotExist',
 	#superclass : 'Error',

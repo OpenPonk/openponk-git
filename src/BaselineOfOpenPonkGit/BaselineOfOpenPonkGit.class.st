@@ -1,3 +1,6 @@
+"
+Metacello baseline for the OpenPonk Git integration plugin, defining its package dependencies and load configurations.
+"
 Class {
 	#name : 'BaselineOfOpenPonkGit',
 	#superclass : 'BaselineOf',

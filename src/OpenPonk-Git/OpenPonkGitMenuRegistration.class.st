@@ -1,3 +1,6 @@
+"
+I register Git-related commands (such as cloning, fetching, and committing) into the OpenPonk workbench top menu toolbar.
+"
 Class {
 	#name : 'OpenPonkGitMenuRegistration',
 	#superclass : 'Object',

@@ -1,3 +1,6 @@
+"
+I am the abstract base Spec presenter for capturing Git repository connection details from the user, including the repository URL, branch name, and authentication token.
+"
 Class {
 	#name : 'OpenPonkGitRepositoryUI',
 	#superclass : 'SpPresenter',
@@ -66,7 +69,7 @@ OpenPonkGitRepositoryUI class >> labelsWidth [
 	^ 180
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'updating' }
 OpenPonkGitRepositoryUI >> checkAllFilled [
 
 	textToken text trim ifEmpty: [ ^ buttonConfirm disable ].
@@ -138,7 +141,7 @@ OpenPonkGitRepositoryUI >> initializeLabels [
 	labelRepository label: 'Repository name'
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'initialization' }
 OpenPonkGitRepositoryUI >> initializePresenters [
 	self 
 		initializeLabels;

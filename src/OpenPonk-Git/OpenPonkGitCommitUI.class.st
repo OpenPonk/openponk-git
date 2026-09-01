@@ -1,3 +1,6 @@
+"
+I am a Spec presenter that extends OpenPonkGitRepositoryUI to provide a user interface for committing project changes to a remote Git repository. I introduce a field for capturing the commit message.
+"
 Class {
 	#name : 'OpenPonkGitCommitUI',
 	#superclass : 'OpenPonkGitRepositoryUI',
@@ -20,7 +23,7 @@ OpenPonkGitCommitUI class >> addItemsTo: aLayout [
 			 yourself)
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'updating' }
 OpenPonkGitCommitUI >> checkAllFilled [
 
 	super checkAllFilled.

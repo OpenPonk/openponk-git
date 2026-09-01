@@ -1,3 +1,6 @@
+"
+I represent the author of a Git commit, containing a name and an email address. I provide a mechanism to persist this information globally across the session.
+"
 Class {
 	#name : 'OPGHAuthor',
 	#superclass : 'Object',
@@ -12,7 +15,7 @@ Class {
 	#package : 'OpenPonk-Git'
 }
 
-{ #category : 'accessing' }
+{ #category : 'actions' }
 OPGHAuthor class >> deleteSavedInstance [
 	savedInstance := nil.
 ]

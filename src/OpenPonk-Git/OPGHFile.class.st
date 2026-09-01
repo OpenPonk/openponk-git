@@ -1,3 +1,6 @@
+"
+I represent a file associated with a Git repository operation. I map a local file to a repository path and hold its content (text or binary), encoding, and Git blob SHA.
+"
 Class {
 	#name : 'OPGHFile',
 	#superclass : 'Object',

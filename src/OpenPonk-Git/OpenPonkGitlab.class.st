@@ -1,3 +1,6 @@
+"
+I implement the OpenPonk Git integration specifically for the GitLab REST API. I manage the low-level API calls, utilizing GitLab's repository commit actions payload to manipulate files.
+"
 Class {
 	#name : 'OpenPonkGitlab',
 	#superclass : 'OpenPonkGit',
@@ -14,7 +17,7 @@ OpenPonkGitlab >> addContentTypeTo: client [
 	client contentType: ZnMimeType applicationJson
 ]
 
-{ #category : 'querying-github' }
+{ #category : 'adding' }
 OpenPonkGitlab >> addTokenTo: client [
 
 	client headerAt: 'PRIVATE-TOKEN' put: credentials token
@@ -32,7 +35,7 @@ OpenPonkGitlab >> apiDomain: aString [
 	apiDomain := aString
 ]
 
-{ #category : 'as yet unclassified' }
+{ #category : 'constants' }
 OpenPonkGitlab >> apiName [
 
 	^ self apiDomain
@@ -100,14 +103,14 @@ OpenPonkGitlab >> getAuthorEmail [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: lastCommitSha [
+OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: aCommitSha [
 
 	| actions |
 	actions := self
 		           getActionsToPostFiles: aFileCollection
-		           withCommitSha: lastCommitSha.
+		           withCommitSha: aCommitSha.
 
-	^ ZnEntity with: (OPJsonWriter toStringPretty: { 
+	^ ZnEntity with: (OPJsonWriter toStringPretty: {
 				   ('branch' -> commit branch).
 				   ('commit_message' -> commit message).
 				   ('actions' -> actions) } asDictionary)
@@ -157,7 +160,7 @@ OpenPonkGitlab >> reposURL [
 	^ self apiURL , '/projects'
 ]
 
-{ #category : 'hooks' }
+{ #category : 'querying-github' }
 OpenPonkGitlab >> shaKey [
 
 	^ 'id'

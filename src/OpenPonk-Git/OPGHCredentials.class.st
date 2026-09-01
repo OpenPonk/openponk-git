@@ -1,3 +1,6 @@
+"
+I encapsulate Git authentication credentials, primarily the personal access token required for API operations. I provide a mechanism to persist this information globally across the session.
+"
 Class {
 	#name : 'OPGHCredentials',
 	#superclass : 'Object',
@@ -11,7 +14,7 @@ Class {
 	#package : 'OpenPonk-Git'
 }
 
-{ #category : 'accessing' }
+{ #category : 'actions' }
 OPGHCredentials class >> deleteSavedInstance [
 
 	savedInstance := nil

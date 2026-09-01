@@ -1,3 +1,6 @@
+"
+I am a Spec presenter that extends OpenPonkGitRepositoryUI to provide a user interface for fetching and importing an OpenPonk project from a remote Git repository.
+"
 Class {
 	#name : 'OpenPonkGitFetchUI',
 	#superclass : 'OpenPonkGitRepositoryUI',
