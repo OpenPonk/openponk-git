@@ -36,15 +36,13 @@ OPGitModelMenuTest >> tearDown [
 ]
 
 { #category : 'tests' }
-OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsInBpmnEditor [
-	"Verifies that Git model repository submenu is present and active in BPMN editor."
-	| bpmnPlugin testEditor modelMenuItem gitItems gitNames |
-	bpmnPlugin := OPPluginRegistry default plugins
-		detect: [ :eachPluginCandidate | eachPluginCandidate isKindOf: OPBPMNPlugin ].
-	testEditor := (OPEditor on: bpmnPlugin)
+OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsWhenEditorHasDiagramController [
+	"Verifies that Git model repository submenu contains all 4 git items when active editor has an initialized diagram controller."
+	| testEditor modelMenuItem gitItems gitItemNames |
+	testEditor := (OPEditor on: OPTestPlugin new)
 		workbench: mockWorkbench;
 		yourself.
-	testEditor openEmptyModel: OPBPMNModel new.
+	testEditor openEmptyModel: OPTestContainerModel new.
 
 	toolbarPresenter focusedEditor: testEditor.
 	modelMenuItem := toolbarPresenter menu menuGroups first menuItems
@@ -52,9 +50,9 @@ OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsInBpmnEditor [
 	gitItems := modelMenuItem subMenu menuGroups
 		flatCollect: [ :eachGroup | eachGroup menuItems select: [ :eachItem | eachItem name = 'Git model repository' ] ].
 	self assert: gitItems isNotEmpty.
-	gitNames := gitItems first subMenu menuGroups
+	gitItemNames := gitItems first subMenu menuGroups
 		flatCollect: [ :eachGroup | eachGroup menuItems collect: [ :eachItem | eachItem name ] ].
-	self assertCollection: gitNames includesAll: #(
+	self assertCollection: gitItemNames includesAll: #(
 		'Upload project to GitHub'
 		'Download project from GitHub'
 		'Upload project to GitLab.com'
@@ -62,53 +60,17 @@ OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsInBpmnEditor [
 ]
 
 { #category : 'tests' }
-OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsInGenericUmlEditor [
-	"Verifies that Git model repository submenu contains all 4 git items in a generic UML editor."
-	| umlPlugin testEditor modelMenuItem gitItems gitNames |
-	umlPlugin := OPPluginRegistry default plugins
-		detect: [ :eachPluginCandidate | eachPluginCandidate isKindOf: OPUmlClassEditorPlugin ].
-	testEditor := (OPEditor on: umlPlugin)
+OPGitModelMenuTest >> testGitSubMenuIsAbsentWhenEditorHasNoDiagramController [
+	"Verifies that Git model repository submenu is omitted when active editor has no diagram controller."
+	| testEditor modelMenuItem gitItems |
+	testEditor := (OPEditor on: OPTestPlugin new)
 		workbench: mockWorkbench;
 		yourself.
-	testEditor openEmptyModel: OPUMLPackage new.
 
 	toolbarPresenter focusedEditor: testEditor.
 	modelMenuItem := toolbarPresenter menu menuGroups first menuItems
 		detect: [ :eachMenuItem | eachMenuItem name = 'Model' ].
 	gitItems := modelMenuItem subMenu menuGroups
 		flatCollect: [ :eachGroup | eachGroup menuItems select: [ :eachItem | eachItem name = 'Git model repository' ] ].
-	self assert: gitItems isNotEmpty.
-	gitNames := gitItems first subMenu menuGroups
-		flatCollect: [ :eachGroup | eachGroup menuItems collect: [ :eachItem | eachItem name ] ].
-	self assertCollection: gitNames includesAll: #(
-		'Upload project to GitHub'
-		'Download project from GitHub'
-		'Upload project to GitLab.com'
-		'Download project from GitLab.com' )
-]
-
-{ #category : 'tests' }
-OPGitModelMenuTest >> testGitSubMenuContainsAllGitCommandsInPetriNetsEditor [
-	"Verifies that Git model repository submenu is present and active in Petri Nets editor."
-	| pnPlugin testEditor modelMenuItem gitItems gitNames |
-	pnPlugin := OPPluginRegistry default plugins
-		detect: [ :eachPluginCandidate | eachPluginCandidate isKindOf: OPPetriNetsPlugin ].
-	testEditor := (OPEditor on: pnPlugin)
-		workbench: mockWorkbench;
-		yourself.
-	testEditor openEmptyModel: OPPetriNet new.
-
-	toolbarPresenter focusedEditor: testEditor.
-	modelMenuItem := toolbarPresenter menu menuGroups first menuItems
-		detect: [ :eachMenuItem | eachMenuItem name = 'Model' ].
-	gitItems := modelMenuItem subMenu menuGroups
-		flatCollect: [ :eachGroup | eachGroup menuItems select: [ :eachItem | eachItem name = 'Git model repository' ] ].
-	self assert: gitItems isNotEmpty.
-	gitNames := gitItems first subMenu menuGroups
-		flatCollect: [ :eachGroup | eachGroup menuItems collect: [ :eachItem | eachItem name ] ].
-	self assertCollection: gitNames includesAll: #(
-		'Upload project to GitHub'
-		'Download project from GitHub'
-		'Upload project to GitLab.com'
-		'Download project from GitLab.com' )
+	self assert: gitItems isEmpty
 ]
