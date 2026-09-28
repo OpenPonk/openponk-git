@@ -11,8 +11,13 @@ Class {
 { #category : 'baselines' }
 BaselineOfOpenPonkGit >> baseline: spec [
 	<baseline>
-	spec
-		for: #common
-		do: [ spec package: 'OpenPonk-Git'.
-			spec group: 'default' with: #('OpenPonk-Git') ]
+	spec for: #common do: [
+		spec
+			baseline: 'OpenPonk'
+			with: [ spec repository: 'github://openponk/openponk' ].
+		spec
+			package: 'OpenPonk-Git'
+			with: [ spec requires: #( 'OpenPonk' ) ].
+		spec
+			group: 'default' with: #( 'OpenPonk-Git' ) ]
 ]
