@@ -14,7 +14,7 @@ BaselineOfOpenPonkGit >> baseline: spec [
 	spec for: #common do: [
 		spec
 			baseline: 'OpenPonk'
-			with: [ spec repository: 'github://OpenPonk/openponk' ].
+			with: [ spec repository: 'github://OpenPonk/openponk:v5.0.1' ].
 		spec
 			package: 'OpenPonk-Git'
 			with: [ spec requires: #( 'OpenPonk' ) ].
