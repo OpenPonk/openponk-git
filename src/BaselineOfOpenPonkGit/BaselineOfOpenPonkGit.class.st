@@ -19,5 +19,8 @@ BaselineOfOpenPonkGit >> baseline: spec [
 			package: 'OpenPonk-Git'
 			with: [ spec requires: #( 'OpenPonk' ) ].
 		spec
-			group: 'default' with: #( 'OpenPonk-Git' ) ]
+			package: 'OpenPonk-Git-Tests'
+			with: [ spec requires: #( 'OpenPonk-Git' ) ].
+		spec
+			group: 'default' with: #( 'OpenPonk-Git' 'OpenPonk-Git-Tests' ) ]
 ]

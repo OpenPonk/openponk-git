@@ -9,9 +9,9 @@ Class {
 		'mockWorkbench',
 		'projectController'
 	],
-	#category : 'OpenPonk-Git-Tests',
-	#package : 'OpenPonk-Git',
-	#tag : 'Tests'
+	#category : 'OpenPonk-Git-Tests-Commands',
+	#package : 'OpenPonk-Git-Tests',
+	#tag : 'Commands'
 }
 
 { #category : 'running' }
