@@ -2,7 +2,7 @@
 I am the abstract base Spec presenter for capturing Git repository connection details from the user, including the repository URL, branch name, and authentication token.
 "
 Class {
-	#name : 'OpenPonkGitRepositoryUI',
+	#name : 'OPGitRepositoryUI',
 	#superclass : 'SpPresenter',
 	#instVars : [
 		'model',
@@ -18,12 +18,13 @@ Class {
 		'labelToken',
 		'textToken'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-GUI',
+	#package : 'OpenPonk-Git',
+	#tag : 'GUI'
 }
 
 { #category : 'layout' }
-OpenPonkGitRepositoryUI class >> addItemsTo: aLayout [
+OPGitRepositoryUI class >> addItemsTo: aLayout [
 
 	aLayout
 		add: (SpBoxLayout newLeftToRight
@@ -49,7 +50,7 @@ OpenPonkGitRepositoryUI class >> addItemsTo: aLayout [
 ]
 
 { #category : 'layout' }
-OpenPonkGitRepositoryUI class >> defaultLayout [
+OPGitRepositoryUI class >> defaultLayout [
 
 	| innerLayout |
 	innerLayout := SpBoxLayout newTopToBottom.
@@ -64,13 +65,13 @@ OpenPonkGitRepositoryUI class >> defaultLayout [
 ]
 
 { #category : 'layout' }
-OpenPonkGitRepositoryUI class >> labelsWidth [
+OPGitRepositoryUI class >> labelsWidth [
 
 	^ 180
 ]
 
 { #category : 'updating' }
-OpenPonkGitRepositoryUI >> checkAllFilled [
+OPGitRepositoryUI >> checkAllFilled [
 
 	textToken text trim ifEmpty: [ ^ buttonConfirm disable ].
 	textRepository text trim ifEmpty: [ ^ buttonConfirm disable ].
@@ -79,12 +80,12 @@ OpenPonkGitRepositoryUI >> checkAllFilled [
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> checkBoxSave [
+OPGitRepositoryUI >> checkBoxSave [
 	^ checkBoxSave
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> connectPresenters [
+OPGitRepositoryUI >> connectPresenters [
 
 	super connectPresenters.
 	buttonConfirm action: [
@@ -99,14 +100,14 @@ OpenPonkGitRepositoryUI >> connectPresenters [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initialize [
+OPGitRepositoryUI >> initialize [
 
 	onConfirm := [  ].
 	super initialize
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializeButtons [
+OPGitRepositoryUI >> initializeButtons [
 	buttonConfirm := self newButton.
 	buttonCancel := self newButton.
 	buttonConfirm 
@@ -116,19 +117,19 @@ OpenPonkGitRepositoryUI >> initializeButtons [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializeCheckBoxes [
+OPGitRepositoryUI >> initializeCheckBoxes [
 	checkBoxSave := self newCheckBox.
 	checkBoxSave state: false.
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializeFocusOrder [
+OPGitRepositoryUI >> initializeFocusOrder [
 
 	self subclassResponsibility
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializeLabels [
+OPGitRepositoryUI >> initializeLabels [
 
 	labelToken := self newLabel.
 	labelBranch := self newLabel.
@@ -142,7 +143,7 @@ OpenPonkGitRepositoryUI >> initializeLabels [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializePresenters [
+OPGitRepositoryUI >> initializePresenters [
 	self 
 		initializeLabels;
 		initializeButtons;
@@ -152,7 +153,7 @@ OpenPonkGitRepositoryUI >> initializePresenters [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitRepositoryUI >> initializeTextBoxes [
+OPGitRepositoryUI >> initializeTextBoxes [
 
 	textToken := self newTextInput.
 	textBranch := self newTextInput.
@@ -161,32 +162,32 @@ OpenPonkGitRepositoryUI >> initializeTextBoxes [
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> model [
+OPGitRepositoryUI >> model [
 	^ model
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> model: anObject [
+OPGitRepositoryUI >> model: anObject [
 	model := anObject
 ]
 
 { #category : 'enumerating' }
-OpenPonkGitRepositoryUI >> onConfirmDo: aBlock [
+OPGitRepositoryUI >> onConfirmDo: aBlock [
 
 	onConfirm := aBlock
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> textBranch [
+OPGitRepositoryUI >> textBranch [
 	^ textBranch
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> textRepository [
+OPGitRepositoryUI >> textRepository [
 	^ textRepository
 ]
 
 { #category : 'accessing' }
-OpenPonkGitRepositoryUI >> textToken [
+OPGitRepositoryUI >> textToken [
 	^ textToken
 ]

@@ -7,8 +7,9 @@ Class {
 	#instVars : [
 		'name'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'instance creation' }

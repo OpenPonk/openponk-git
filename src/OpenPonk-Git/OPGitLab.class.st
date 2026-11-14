@@ -2,65 +2,66 @@
 I implement the OpenPonk Git integration specifically for the GitLab REST API. I manage the low-level API calls, utilizing GitLab's repository commit actions payload to manipulate files.
 "
 Class {
-	#name : 'OpenPonkGitlab',
-	#superclass : 'OpenPonkGit',
+	#name : 'OPGitLab',
+	#superclass : 'OPGit',
 	#instVars : [
 		'apiDomain'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'adding' }
-OpenPonkGitlab >> addContentTypeTo: client [
+OPGitLab >> addContentTypeTo: client [
 
 	client contentType: ZnMimeType applicationJson
 ]
 
 { #category : 'adding' }
-OpenPonkGitlab >> addTokenTo: client [
+OPGitLab >> addTokenTo: client [
 
 	client headerAt: 'PRIVATE-TOKEN' put: credentials token
 ]
 
 { #category : 'constants - url' }
-OpenPonkGitlab >> apiDomain [
+OPGitLab >> apiDomain [
 
 	^ apiDomain ifNil: [ 'gitlab.com' ]
 ]
 
 { #category : 'constants - url' }
-OpenPonkGitlab >> apiDomain: aString [
+OPGitLab >> apiDomain: aString [
 
 	apiDomain := aString
 ]
 
 { #category : 'constants' }
-OpenPonkGitlab >> apiName [
+OPGitLab >> apiName [
 
 	^ self apiDomain
 ]
 
 { #category : 'constants - url' }
-OpenPonkGitlab >> apiURL [
+OPGitLab >> apiURL [
 
 	^ 'https://' , self apiDomain , '/' , self apiVersionPath
 ]
 
-{ #category : 'as yet unclassified' }
-OpenPonkGitlab >> apiVersionPath [
+{ #category : 'constants - url' }
+OPGitLab >> apiVersionPath [
 
 	^ 'api/v4'
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> blobUrlFor: aFile [
+OPGitLab >> blobUrlFor: aFile [
 
 	^ self userRepositoryURL , '/blobs/' , aFile blobSha
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> commitChangesFor: aFileCollection [
+OPGitLab >> commitChangesFor: aFileCollection [
 
 	| client response |
 	client := ZnClient new.
@@ -77,7 +78,7 @@ OpenPonkGitlab >> commitChangesFor: aFileCollection [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
+OPGitLab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitSha [
 
 	| paths |
 	paths := [ self getFileBlobs collect: #pathInRepo as: Set ]
@@ -94,7 +95,7 @@ OpenPonkGitlab >> getActionsToPostFiles: aFileCollection withCommitSha: aCommitS
 ]
 
 { #category : 'commit-process' }
-OpenPonkGitlab >> getAuthorEmail [
+OPGitLab >> getAuthorEmail [
 
 	| options |
 	options := self getPossibleAuthorEmails.
@@ -103,7 +104,7 @@ OpenPonkGitlab >> getAuthorEmail [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: aCommitSha [
+OPGitLab >> getCommitEntityFor: aFileCollection withCommitSha: aCommitSha [
 
 	| actions |
 	actions := self
@@ -117,14 +118,14 @@ OpenPonkGitlab >> getCommitEntityFor: aFileCollection withCommitSha: aCommitSha 
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> getFileBlobs [
+OPGitLab >> getFileBlobs [
 
 	^ self filterBlobs:
 		  (self getRepoItems select: [ :each | (each at: #type) = 'blob' ])
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> getRepoItems [
+OPGitLab >> getRepoItems [
 
 	| client response |
 	client := ZnClient new.
@@ -148,26 +149,26 @@ OpenPonkGitlab >> getRepoItems [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> preparePost: client [
+OPGitLab >> preparePost: client [
 
 	super preparePost: client.
 	self addContentTypeTo: client
 ]
 
 { #category : 'constants - url' }
-OpenPonkGitlab >> reposURL [
+OPGitLab >> reposURL [
 
 	^ self apiURL , '/projects'
 ]
 
 { #category : 'querying-github' }
-OpenPonkGitlab >> shaKey [
+OPGitLab >> shaKey [
 
 	^ 'id'
 ]
 
 { #category : 'constants - url' }
-OpenPonkGitlab >> userRepositoryURL [
+OPGitLab >> userRepositoryURL [
 
 	^ self reposURL , '/' , commit repository urlEncoded , '/repository'
 ]

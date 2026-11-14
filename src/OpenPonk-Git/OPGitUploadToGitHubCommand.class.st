@@ -33,7 +33,7 @@ OPGitUploadToGitHubCommand >> defaultMenuItemName [
 { #category : 'execution' }
 OPGitUploadToGitHubCommand >> execute [
 	"Starts the commit and upload process to GitHub."
-	(OpenPonkGithub
+	(OPGitHub
 		withProject: self projectController
 		withDiagram: self editor canvasPresenter) startCommitProcess
 ]

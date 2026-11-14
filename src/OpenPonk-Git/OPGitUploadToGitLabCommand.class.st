@@ -33,7 +33,7 @@ OPGitUploadToGitLabCommand >> defaultMenuItemName [
 { #category : 'execution' }
 OPGitUploadToGitLabCommand >> execute [
 	"Starts the commit and upload process to GitLab."
-	(OpenPonkGitlab
+	(OPGitLab
 		withProject: self projectController
 		withDiagram: self editor canvasPresenter) startCommitProcess
 ]

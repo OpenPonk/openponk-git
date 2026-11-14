@@ -11,8 +11,9 @@ Class {
 		'content',
 		'encoding'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'navigating' }
@@ -81,7 +82,7 @@ OPGHFile >> encoding: aString [
 
 { #category : 'accessing' }
 OPGHFile >> extension [
-	^ localFile asPath extension
+	^ self localFile asPath extension
 ]
 
 { #category : 'accessing' }
@@ -100,7 +101,7 @@ OPGHFile >> localFile: anObject [
 OPGHFile >> localFileIn: aDirectory [
 
 	self assert: self pathInRepo isNotNil.
-	self localFile: aDirectory / self pathInRepo
+	self localFile: aDirectory asFileReference / self pathInRepo
 ]
 
 { #category : 'accessing' }
@@ -133,10 +134,8 @@ OPGHFile >> saveText [
 	file := localFile asFileReference.
 	file parent ensureCreateDirectory.
 	file ensureDelete.
-	file writeStreamDo: [ :stream | 
-		stream
-			truncate;
-			nextPutAll: content ]
+	file writeStreamDo: [ :stream |
+		stream nextPutAll: content ]
 ]
 
 { #category : 'fileout' }

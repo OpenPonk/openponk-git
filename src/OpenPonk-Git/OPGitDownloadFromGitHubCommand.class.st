@@ -33,5 +33,5 @@ OPGitDownloadFromGitHubCommand >> defaultMenuItemName [
 { #category : 'execution' }
 OPGitDownloadFromGitHubCommand >> execute [
 	"Starts the download and fetch process from GitHub."
-	(OpenPonkGithub withSpApplication: self editor application) startFetchProcess
+	(OPGitHub withSpApplication: self editor application) startFetchProcess
 ]

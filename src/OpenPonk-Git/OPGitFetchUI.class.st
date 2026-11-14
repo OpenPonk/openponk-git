@@ -2,21 +2,22 @@
 I am a Spec presenter that extends OpenPonkGitRepositoryUI to provide a user interface for fetching and importing an OpenPonk project from a remote Git repository.
 "
 Class {
-	#name : 'OpenPonkGitFetchUI',
-	#superclass : 'OpenPonkGitRepositoryUI',
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#name : 'OPGitFetchUI',
+	#superclass : 'OPGitRepositoryUI',
+	#category : 'OpenPonk-Git-GUI',
+	#package : 'OpenPonk-Git',
+	#tag : 'GUI'
 }
 
 { #category : 'initialization' }
-OpenPonkGitFetchUI >> initializeButtons [
+OPGitFetchUI >> initializeButtons [
 
 	super initializeButtons.
 	buttonConfirm label: 'Fetch'
 ]
 
 { #category : 'initialization' }
-OpenPonkGitFetchUI >> initializeFocusOrder [
+OPGitFetchUI >> initializeFocusOrder [
 
 	self focusOrder
 		add: textToken;
@@ -28,7 +29,7 @@ OpenPonkGitFetchUI >> initializeFocusOrder [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitFetchUI >> initializeWindow: aWindow [
+OPGitFetchUI >> initializeWindow: aWindow [
 
 	super initializeWindow: aWindow.
 	aWindow

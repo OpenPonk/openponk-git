@@ -2,43 +2,44 @@
 I implement the OpenPonk Git integration specifically for the GitHub REST API. I manage the low-level API calls required to create blobs, trees, commits, and update branch references.
 "
 Class {
-	#name : 'OpenPonkGithub',
-	#superclass : 'OpenPonkGit',
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#name : 'OPGitHub',
+	#superclass : 'OPGit',
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'adding' }
-OpenPonkGithub >> addAcceptTo: client [
+OPGitHub >> addAcceptTo: client [
 
 	client headerAt: 'Accept' put: 'application/vnd.github.v3+json'
 ]
 
 { #category : 'adding' }
-OpenPonkGithub >> addTokenTo: client [
+OPGitHub >> addTokenTo: client [
 
 	client headerAt: 'Authorization' put: 'token ' , credentials token
 ]
 
 { #category : 'constants' }
-OpenPonkGithub >> apiName [
+OPGitHub >> apiName [
 
 	^ 'GitHub'
 ]
 
 { #category : 'constants - url' }
-OpenPonkGithub >> apiURL [
+OPGitHub >> apiURL [
 	^ 'https://api.github.com'
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> blobUrlFor: aFile [
+OPGitHub >> blobUrlFor: aFile [
 
 	^ self userRepositoryURL , '/git/blobs/' , aFile blobSha
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> commitChangesFor: aFileCollection [
+OPGitHub >> commitChangesFor: aFileCollection [
 
 	| treeSha commitSha |
 	self postBlobsFor: aFileCollection.
@@ -54,7 +55,7 @@ OpenPonkGithub >> commitChangesFor: aFileCollection [
 ]
 
 { #category : 'private-entity creation' }
-OpenPonkGithub >> getBase64StringFor: aFile [
+OPGitHub >> getBase64StringFor: aFile [
 
 	^ '{
 	"content":"' , aFile contentBase64 contents , '",
@@ -63,7 +64,7 @@ OpenPonkGithub >> getBase64StringFor: aFile [
 ]
 
 { #category : 'private-entity creation' }
-OpenPonkGithub >> getCommitEntityWithCommitSha: commitSha withTreeSha: treeSha [
+OPGitHub >> getCommitEntityWithCommitSha: commitSha withTreeSha: treeSha [
 
 	"POST /repos/:owner/:repo/git/blobs"
 
@@ -81,13 +82,13 @@ OpenPonkGithub >> getCommitEntityWithCommitSha: commitSha withTreeSha: treeSha [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> getFileBlobs [
+OPGitHub >> getFileBlobs [
 
 	^ self getFileBlobsFrom: self getTreeSha
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> getFileBlobsFrom: aTreeSha [
+OPGitHub >> getFileBlobsFrom: aTreeSha [
 
 	| client response tree |
 	client := ZnClient new.
@@ -101,18 +102,18 @@ OpenPonkGithub >> getFileBlobsFrom: aTreeSha [
 ]
 
 { #category : 'private-entity creation' }
-OpenPonkGithub >> getFileTreeStringFor: aFile [
+OPGitHub >> getFileTreeStringFor: aFile [
 
 	^ '     {
-       "path": "' , aFile name , '",
-       "mode": "100644",
-       "type": "blob",
-       "sha": "' , aFile blobSha , '"
-     }'
+        "path": "' , aFile pathInRepo , '",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "' , aFile blobSha , '"
+      }'
 ]
 
 { #category : 'private-entity creation' }
-OpenPonkGithub >> getTreeEntityFor: aFileCollection withLastCommitSha: aLastCommitSha [
+OPGitHub >> getTreeEntityFor: aFileCollection withLastCommitSha: aLastCommitSha [
 	| fileStrings array |
 	fileStrings :=  ''.
 	array := aFileCollection asArray.
@@ -128,7 +129,7 @@ OpenPonkGithub >> getTreeEntityFor: aFileCollection withLastCommitSha: aLastComm
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> getTreeSha [
+OPGitHub >> getTreeSha [
 
 	| client response |
 	client := ZnClient new.
@@ -143,24 +144,26 @@ OpenPonkGithub >> getTreeSha [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> postBlobsFor: aFileCollection [
+OPGitHub >> postBlobsFor: aFileCollection [
 
 	"POST /repos/:owner/:repo/git/blobs"
 
-	| client response |
-	client := ZnClient new.
-	client url: self userRepositoryURL , '/git/blobs'.
-	self preparePost: client.
-	response := [ :job | 
-	            job title: 'Uploading files to repository'.
-	            NeoJSONReader fromString: client post ] asJob run.
-	aFileCollection do: [ :file | 
-		client contents: (self getBase64StringFor: file).
+	aFileCollection do: [ :file |
+		| client response |
+		client := ZnClient new.
+		client url: self userRepositoryURL , '/git/blobs'.
+		client entity: (ZnEntity
+			with: (self getBase64StringFor: file)
+			type: ZnMimeType applicationJson).
+		self preparePost: client.
+		response := [ :job |
+			job title: 'Uploading files to repository'.
+			NeoJSONReader fromString: client post ] asJob run.
 		file blobSha: (response at: self shaKey) ]
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> postBranchHeadFor: aCommitSha [
+OPGitHub >> postBranchHeadFor: aCommitSha [
 
 	"POST /repos/:owner/:repo/git/blobs"
 
@@ -182,7 +185,7 @@ OpenPonkGithub >> postBranchHeadFor: aCommitSha [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> postCommitFor: aFileCollection withLastCommitSha: aLastCommitSha withTreeSha: aTreeSha [
+OPGitHub >> postCommitFor: aFileCollection withLastCommitSha: aLastCommitSha withTreeSha: aTreeSha [
 
 	"POST /repos/:owner/:repo/git/blobs"
 
@@ -200,7 +203,7 @@ OpenPonkGithub >> postCommitFor: aFileCollection withLastCommitSha: aLastCommitS
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> postTreesFor: aFileCollection withLastCommitSha: aLastCommitSha [
+OPGitHub >> postTreesFor: aFileCollection withLastCommitSha: aLastCommitSha [
 
 	"POST /repos/:owner/:repo/git/trees"
 
@@ -218,21 +221,21 @@ OpenPonkGithub >> postTreesFor: aFileCollection withLastCommitSha: aLastCommitSh
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> prepareGet: client [
+OPGitHub >> prepareGet: client [
 
 	super prepareGet: client.
 	self addAcceptTo: client
 ]
 
 { #category : 'querying-github' }
-OpenPonkGithub >> preparePost: client [
+OPGitHub >> preparePost: client [
 
 	super preparePost: client.
 	self addAcceptTo: client
 ]
 
 { #category : 'constants - url' }
-OpenPonkGithub >> reposURL [
+OPGitHub >> reposURL [
 
 	^ self apiURL , '/repos'
 ]

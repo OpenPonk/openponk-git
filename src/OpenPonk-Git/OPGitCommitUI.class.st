@@ -2,18 +2,19 @@
 I am a Spec presenter that extends OpenPonkGitRepositoryUI to provide a user interface for committing project changes to a remote Git repository. I introduce a field for capturing the commit message.
 "
 Class {
-	#name : 'OpenPonkGitCommitUI',
-	#superclass : 'OpenPonkGitRepositoryUI',
+	#name : 'OPGitCommitUI',
+	#superclass : 'OPGitRepositoryUI',
 	#instVars : [
 		'labelMsg',
 		'textMsg'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-GUI',
+	#package : 'OpenPonk-Git',
+	#tag : 'GUI'
 }
 
 { #category : 'layout' }
-OpenPonkGitCommitUI class >> addItemsTo: aLayout [
+OPGitCommitUI class >> addItemsTo: aLayout [
 
 	super addItemsTo: aLayout.
 	aLayout add: (SpBoxLayout newLeftToRight
@@ -24,7 +25,7 @@ OpenPonkGitCommitUI class >> addItemsTo: aLayout [
 ]
 
 { #category : 'updating' }
-OpenPonkGitCommitUI >> checkAllFilled [
+OPGitCommitUI >> checkAllFilled [
 
 	super checkAllFilled.
 	buttonConfirm isEnabled ifFalse: [ ^ self ].
@@ -33,7 +34,7 @@ OpenPonkGitCommitUI >> checkAllFilled [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> connectPresenters [
+OPGitCommitUI >> connectPresenters [
 
 	super connectPresenters.
 	
@@ -41,14 +42,14 @@ OpenPonkGitCommitUI >> connectPresenters [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> initializeButtons [
+OPGitCommitUI >> initializeButtons [
 
 	super initializeButtons.
 	buttonConfirm label: 'Commit'
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> initializeFocusOrder [
+OPGitCommitUI >> initializeFocusOrder [
 
 	self focusOrder
 		add: textToken;
@@ -61,7 +62,7 @@ OpenPonkGitCommitUI >> initializeFocusOrder [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> initializeLabels [
+OPGitCommitUI >> initializeLabels [
 
 	super initializeLabels.
 	labelMsg := self newLabel.
@@ -69,14 +70,14 @@ OpenPonkGitCommitUI >> initializeLabels [
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> initializeTextBoxes [
+OPGitCommitUI >> initializeTextBoxes [
 
 	super initializeTextBoxes.
 	textMsg := self newTextInput
 ]
 
 { #category : 'initialization' }
-OpenPonkGitCommitUI >> initializeWindow: aWindow [
+OPGitCommitUI >> initializeWindow: aWindow [
 
 	super initializeWindow: aWindow.
 	aWindow
@@ -85,6 +86,6 @@ OpenPonkGitCommitUI >> initializeWindow: aWindow [
 ]
 
 { #category : 'accessing' }
-OpenPonkGitCommitUI >> textMsg [
+OPGitCommitUI >> textMsg [
 	^ textMsg
 ]

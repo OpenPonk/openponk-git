@@ -33,5 +33,5 @@ OPGitDownloadFromGitLabCommand >> defaultMenuItemName [
 { #category : 'execution' }
 OPGitDownloadFromGitLabCommand >> execute [
 	"Starts the download and fetch process from GitLab."
-	(OpenPonkGitlab withSpApplication: self editor application) startFetchProcess
+	(OPGitLab withSpApplication: self editor application) startFetchProcess
 ]

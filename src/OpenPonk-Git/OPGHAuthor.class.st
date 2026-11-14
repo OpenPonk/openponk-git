@@ -11,8 +11,9 @@ Class {
 	#classInstVars : [
 		'savedInstance'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'actions' }
@@ -26,11 +27,6 @@ OPGHAuthor class >> getInstance [
 ]
 
 { #category : 'accessing' }
-OPGHAuthor class >> hasSavedInstance [
-	^ savedInstance notNil.
-]
-
-{ #category : 'accessing' }
 OPGHAuthor class >> savedInstance [
 	^ savedInstance.
 ]
@@ -38,14 +34,6 @@ OPGHAuthor class >> savedInstance [
 { #category : 'accessing' }
 OPGHAuthor class >> savedInstance: aInstance [
 	 savedInstance := aInstance.
-]
-
-{ #category : 'initialization' }
-OPGHAuthor class >> withName: aName withEmail: aEmail [
-	| instance |
-	instance := self new.
-	^ instance name: aName;
-		email: aEmail.
 ]
 
 { #category : 'access' }
@@ -75,10 +63,10 @@ OPGHAuthor >> valid [
 
 { #category : 'access' }
 OPGHAuthor >> validEmail [
-	^ email ~= '' and: [ email includes: '@'. ].
+	^ email isNotNil and: [ email includes: $@ ]
 ]
 
 { #category : 'access' }
 OPGHAuthor >> validName [
-	^ name ~= ''.
+	^ name isNotNil and: [ name isNotEmpty ]
 ]

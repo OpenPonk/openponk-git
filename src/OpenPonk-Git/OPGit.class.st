@@ -2,7 +2,7 @@
 I am the abstract base class orchestrating Git integration within OpenPonk. I handle the high-level workflow for fetching projects from and committing changes to remote Git repositories via their respective APIs.
 "
 Class {
-	#name : 'OpenPonkGit',
+	#name : 'OPGit',
 	#superclass : 'Object',
 	#instVars : [
 		'author',
@@ -14,12 +14,13 @@ Class {
 		'lastCommitSha',
 		'spApplication'
 	],
-	#category : 'OpenPonk-Git',
-	#package : 'OpenPonk-Git'
+	#category : 'OpenPonk-Git-Model',
+	#package : 'OpenPonk-Git',
+	#tag : 'Model'
 }
 
 { #category : 'initialization' }
-OpenPonkGit class >> withProject: aProjectController withDiagram: aCanvasModel [
+OPGit class >> withProject: aProjectController withDiagram: aCanvasModel [
 	| instance |
 	instance := self new.
 	instance project: aProjectController.
@@ -28,7 +29,7 @@ OpenPonkGit class >> withProject: aProjectController withDiagram: aCanvasModel [
 ]
 
 { #category : 'instance creation' }
-OpenPonkGit class >> withSpApplication: aSpApplication [
+OPGit class >> withSpApplication: aSpApplication [
 
 	^ self new
 		  spApplication: aSpApplication;
@@ -36,74 +37,74 @@ OpenPonkGit class >> withSpApplication: aSpApplication [
 ]
 
 { #category : 'adding' }
-OpenPonkGit >> addTokenTo: client [
+OPGit >> addTokenTo: client [
 
 	self subclassResponsibility
 ]
 
 { #category : 'constants' }
-OpenPonkGit >> apiName [
+OPGit >> apiName [
 
 	^ 'Git'
 ]
 
 { #category : 'constants - url' }
-OpenPonkGit >> apiURL [
+OPGit >> apiURL [
 
 	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> author [ 
+OPGit >> author [ 
 	^ author.
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> author: aAuthor [
+OPGit >> author: aAuthor [
 	author := aAuthor.
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> blobUrlFor: aFile [
+OPGit >> blobUrlFor: aFile [
 
 	^ self subclassResponsibility
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> commit [
+OPGit >> commit [
 	^ commit
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> commit: anObject [
+OPGit >> commit: anObject [
 	commit := anObject
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> commitChangesFor: aFileCollection [
+OPGit >> commitChangesFor: aFileCollection [
 
 	self subclassResponsibility
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> commitChangesForProject: aProjectController withDiagram: aCanvasModel [
+OPGit >> commitChangesForProject: aProjectController withDiagram: aCanvasModel [
 
 	| projectFile pngFile |
 	aProjectController saveProject.
-	projectFile := aProjectController project storageFile ifNil: [ 
-		               ^ self error: 'Saving project failed' ].
+	projectFile := aProjectController project storageFile ifNil: [
+		^ self error: 'Saving project failed' ].
 	pngFile := projectFile withExtension: 'png'.
 	aCanvasModel exportAsPng: pngFile.
-	self commitChangesFor: { 
-			(OPGHFile withPath: projectFile basename file: projectFile).
-			(OPGHFile withPath: pngFile basename file: projectFile) }.
-	finishedAction value: { 
-			projectFile.
-			pngFile }
+	self commitChangesFor: {
+		OPGHFile withPath: projectFile basename file: projectFile.
+		OPGHFile withPath: pngFile basename file: pngFile }.
+	finishedAction value: {
+		projectFile.
+		pngFile }
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> commitSet: aForm [
+OPGit >> commitSet: aForm [
 
 	self repositoryFilled: aForm.
 	commit message: aForm textMsg text.
@@ -111,38 +112,38 @@ OpenPonkGit >> commitSet: aForm [
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> credentials [
+OPGit >> credentials [
 	^ credentials
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> credentials: anOPGHCredentials [ 
+OPGit >> credentials: anOPGHCredentials [ 
 	credentials := anOPGHCredentials
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> diagram [
+OPGit >> diagram [
 	^ diagram
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> diagram: anObject [
+OPGit >> diagram: anObject [
 	diagram := anObject
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> directoryInRepo [
+OPGit >> directoryInRepo [
 
 	^ ''
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> directorySelected: aDirectoryPath [
+OPGit >> directorySelected: aDirectoryPath [
 
 	| projectControllers |
 	projectControllers := (self fetchProjectAndSaveItTo: aDirectoryPath)
-		                      select: [ :each | each endsWith: '.opp' ]
-		                      thenCollect: [ :each | 
+		                      select: [ :each | each asFileReference extension = 'opp' ]
+		                      thenCollect: [ :each |
 			                      (OPProjectController fromFile:
 				                       each asFileReference) open
 				                      projectController ].
@@ -151,7 +152,7 @@ OpenPonkGit >> directorySelected: aDirectoryPath [
 ]
 
 { #category : 'exceptions' }
-OpenPonkGit >> errorFrom: aCollection missing: aString [
+OPGit >> errorFrom: aCollection missing: aString [
 
 	| message |
 	message := aCollection at: #message ifAbsent: [ 
@@ -167,7 +168,7 @@ OpenPonkGit >> errorFrom: aCollection missing: aString [
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
+OPGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 
 	| fileBlobs |
 	fileBlobs := self getFileBlobs.
@@ -177,14 +178,14 @@ OpenPonkGit >> fetchProjectAndSaveItTo: aDirectoryPath [
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> fetchRepositoryFilled: aForm [
+OPGit >> fetchRepositoryFilled: aForm [
 
 	self repositoryFilled: aForm.
 	self showDirectoryDialog
 ]
 
-{ #category : 'as yet unclassified' }
-OpenPonkGit >> filterBlobs: blobDictionaryCollection [
+{ #category : 'utils' }
+OPGit >> filterBlobs: blobDictionaryCollection [
 
 	| result |
 	result := blobDictionaryCollection collect: [ :each | 
@@ -196,7 +197,7 @@ OpenPonkGit >> filterBlobs: blobDictionaryCollection [
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> findAuthorAndProceed [
+OPGit >> findAuthorAndProceed [
 
 	| client response |
 	client := ZnClient new.
@@ -212,7 +213,7 @@ OpenPonkGit >> findAuthorAndProceed [
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> getAuthorEmail [
+OPGit >> getAuthorEmail [
 
 	| options |
 	options := self getPossibleAuthorEmails.
@@ -220,7 +221,7 @@ OpenPonkGit >> getAuthorEmail [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> getContentFor: aFile [
+OPGit >> getContentFor: aFile [
 
 	| client response |
 	client := ZnClient new.
@@ -237,13 +238,13 @@ OpenPonkGit >> getContentFor: aFile [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> getFileBlobs [
+OPGit >> getFileBlobs [
 
 	^ self subclassResponsibility
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> getLastCommitSha [
+OPGit >> getLastCommitSha [
 
 	| client response |
 	lastCommitSha ifNotNil: [ ^ lastCommitSha ].
@@ -261,7 +262,7 @@ OpenPonkGit >> getLastCommitSha [
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> getPossibleAuthorEmails [
+OPGit >> getPossibleAuthorEmails [
 
 	| client |
 	client := ZnClient new.
@@ -272,14 +273,14 @@ OpenPonkGit >> getPossibleAuthorEmails [
 	  NeoJSONReader fromString: client get ] asJob run
 ]
 
-{ #category : 'as yet unclassified' }
-OpenPonkGit >> informCommited [
+{ #category : 'exceptions' }
+OPGit >> informCommited [
 
 	self inform: 'Model uploaded to ' , self apiName
 ]
 
 { #category : 'initialization' }
-OpenPonkGit >> initialize [
+OPGit >> initialize [
 
 	super initialize.
 
@@ -291,35 +292,35 @@ OpenPonkGit >> initialize [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> prepareGet: client [
+OPGit >> prepareGet: client [
 
 	self addTokenTo: client
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> preparePost: client [
+OPGit >> preparePost: client [
 
 	self addTokenTo: client
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> project [
+OPGit >> project [
 	^ project
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> project: anObject [
+OPGit >> project: anObject [
 	project := anObject
 ]
 
 { #category : 'constants - url' }
-OpenPonkGit >> reposURL [
+OPGit >> reposURL [
 
 	^ self subclassResponsibility
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> repositoryFilled: aForm [
+OPGit >> repositoryFilled: aForm [
 
 	credentials token: aForm textToken text.
 	commit repository: aForm textRepository text.
@@ -334,16 +335,16 @@ OpenPonkGit >> repositoryFilled: aForm [
 ]
 
 { #category : 'querying-github' }
-OpenPonkGit >> shaKey [
+OPGit >> shaKey [
 
 	^ 'sha'
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> showCommitForm [
+OPGit >> showCommitForm [
 
 	| ui savedCommit savedCredentials |
-	ui := OpenPonkGitCommitUI newApplication: self spApplication.
+	ui := OPGitCommitUI newApplication: self spApplication.
 	ui model: self.
 	ui onConfirmDo: [ self commitSet: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
@@ -359,17 +360,17 @@ OpenPonkGit >> showCommitForm [
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> showDirectoryDialog [
+OPGit >> showDirectoryDialog [
 
 	StOpenDirectoryPresenter chooseThenDo: [ :directory | 
 		self directorySelected: directory pathString ]
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> showFetchForm [
+OPGit >> showFetchForm [
 
 	| ui repository savedCredentials |
-	ui := OpenPonkGitFetchUI newApplication: self spApplication.
+	ui := OPGitFetchUI newApplication: self spApplication.
 	ui model: self.
 	ui onConfirmDo: [ self fetchRepositoryFilled: ui ].
 	savedCredentials := OPGHCredentials savedInstance.
@@ -385,36 +386,36 @@ OpenPonkGit >> showFetchForm [
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> spApplication [
+OPGit >> spApplication [
 
 	^ spApplication ifNil: [ diagram application ]
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> spApplication: aSpApplication [
+OPGit >> spApplication: aSpApplication [
 
 	spApplication := aSpApplication
 ]
 
 { #category : 'commit-process' }
-OpenPonkGit >> startCommitProcess [
+OPGit >> startCommitProcess [
 
 	self showCommitForm
 ]
 
 { #category : 'fetch-process' }
-OpenPonkGit >> startFetchProcess [
+OPGit >> startFetchProcess [
 
 	self showFetchForm
 ]
 
 { #category : 'constants - url' }
-OpenPonkGit >> userRepositoryURL [
+OPGit >> userRepositoryURL [
 	^ self reposURL , '/' , commit repository.
 ]
 
 { #category : 'accessing' }
-OpenPonkGit >> whenFinishedDo: aBlock [
+OPGit >> whenFinishedDo: aBlock [
 
 	finishedAction := aBlock
 ]
